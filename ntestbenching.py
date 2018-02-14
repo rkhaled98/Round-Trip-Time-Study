@@ -26,14 +26,16 @@ def main():
     create_plot2(RTTs, pR, RTTstwo)
 
 
-    #create_plot_specific_site("www.google.com",100)
+    create_plot_specific_site("www.google.com",100)
     #   create_plot_specific_site("bet365.com-en-",200)
-    #create_plot_specific_site("www.imgur.com",40)
-    #create_plot_specific_site("www.mail.ru",400)
-    #create_plot_specific_site("www.github.com",150)
-    #create_plot_specific_site("www.yahoo.com",150)
-    #create_plot_specific_site("www.ok.ru",400)
-    #create_plot_specific_site("www.instagram.com",150)
+    create_plot_specific_site("www.imgur.com",40)
+    create_plot_specific_site("www.mail.ru",400)
+    create_plot_specific_site("www.github.com",150)
+    create_plot_specific_site("www.yahoo.com",150)
+    create_plot_specific_site("www.ok.ru",400)
+    create_plot_specific_site("www.instagram.com",150)
+    create_plot_specific_site("www.tripadvisor.com", 150)
+    create_plot_specific_site("www.reddit.com", 150)
 
 #the purpose of this function is to create
 #a separate log file for each website in the
@@ -44,9 +46,9 @@ def makeFiles():
     for line in f.readlines():
         values = line.split(',')
         sitename = values[1].replace("https://", "").replace("/", "-")
-        RTT = values[-3]
-        RTTstwo = values[-2]
-        pRTT = values[-1]
+        RTT = values[-3].replace('\n','')
+        RTTstwo = values[-2].replace('\n','')
+        pRTT = values[-1].replace('\n','')
 
         if sitename != 'sitename':
             website_logs[sitename].append((RTT, pRTT, RTTstwo))
@@ -69,7 +71,8 @@ def makeFiles():
             '''
         for RTT in website_logs[site]:
             #f.writelines(RTT[0] + ',\n' + RTT[1] + ',\n' + RTT[2])
-            line = "%f,%f,%f" % (RTT[0],RTT[1],RTT[2])
+            line = "%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2])
+            f.writelines(line)
 
 
 
@@ -161,12 +164,12 @@ def get_prtts_site(site):
 
 def get_rttstwo_site(site):
     f = open(get_location(site), 'r')
-    rttstwo = []
+    rttstwos = []
     for line in f.readlines():
         rttstwo = line.split(',')[2]
-        rttstwo.append(pRTT)
+        rttstwos.append(rttstwo)
     f.close()
-    return rttstwo
+    return rttstwos
 
 #the purpose of this function is to
 #cast each value in the array to a float
@@ -219,7 +222,7 @@ def create_plot_specific_site(site, limx):
     b = sort_and_cast(RTTsite)
     pRTTsite = get_prtts_site(site)
     c = sort_and_cast(pRTTsite)
-    RTTtwosite = get_rttstwo_site()
+    RTTtwosite = get_rttstwo_site(site)
     z = sort_and_cast(RTTtwosite)
     a = sort_and_cast(b)#rtt
     d = sort_and_cast(c)#ping rtt
