@@ -11,22 +11,7 @@ def main():
     vals = get_values()
 
     create_plot_cdf()
-
-    valsgoog = get_values(site = "www.google.com")
     create_plot_cdf(site = "www.google.com", xlim = 100)
-
-    '''
-    create_plot_specific_site("www.google.com",100)
-    create_plot_specific_site("bet365.com-en-",200)
-    create_plot_specific_site("www.imgur.com",40)
-    create_plot_specific_site("www.mail.ru",400)
-    create_plot_specific_site("www.github.com",150)
-    create_plot_specific_site("www.yahoo.com",150)
-    create_plot_specific_site("www.ok.ru",400)
-    create_plot_specific_site("www.instagram.com",150)
-    create_plot_specific_site("www.tripadvisor.com", 150)
-    create_plot_specific_site("www.reddit.com", 150)
-    '''
 
 #the purpose of this function is to create
 #a separate log file for each website in the
@@ -110,9 +95,9 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     vals = get_values(site)
 
     a = sort_and_cast(vals[0])
-    d = sort_and_cast(vals[2])
     y = sort_and_cast(vals[1])
-
+    d = sort_and_cast(vals[2])
+    
     plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
     plt.plot(np.sort(d), np.linspace(0, 1, len(d), endpoint=False))
     plt.plot(np.sort(y), np.linspace(0, 1, len(y), endpoint=False))
