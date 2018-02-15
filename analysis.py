@@ -27,7 +27,7 @@ def main():
 #a separate log file for each website in the
 #directory folder logs.
 def makeFiles():
-    f = open('xxnlog.txt', 'r')
+    f = open('aggregatelog.txt', 'r')
     website_logs = collections.defaultdict(list)
     for line in f.readlines():
         values = line.split(',')
@@ -54,7 +54,7 @@ def makeFiles():
     f.close()
 
 def get_values():
-    f = open("xxnlog.txt", 'r')
+    f = open("aggregatelog.txt", 'r')
     pR = []
     RTTs = []
     RTTv2s = []
