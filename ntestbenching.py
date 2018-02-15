@@ -6,21 +6,11 @@ from scipy import stats
 import collections
 
 def main():
-    RTTs = get_rtts_log()
-    pR = get_ping_rtts_log()
-    RTTstwo = get_rtts_two_log()
+    vals = get_values()
 
-    #vals = get_values()
+    create_plot2(vals[1], vals[0], vals[2])
 
-    print("printing sorted ping rtts")
-    print(np.sort(pR))
-    #RTTsite = get_rtts_site("www.google.com")
-    print("printing sorted rtts")
-    print(np.sort(RTTs))
-    #create the generalized plot of all the websites
-    create_plot2(RTTs, pR, RTTstwo)
-
-
+'''
     create_plot_specific_site("www.google.com",100)
     #   create_plot_specific_site("bet365.com-en-",200)
     create_plot_specific_site("www.imgur.com",40)
@@ -31,6 +21,7 @@ def main():
     create_plot_specific_site("www.instagram.com",150)
     create_plot_specific_site("www.tripadvisor.com", 150)
     create_plot_specific_site("www.reddit.com", 150)
+    '''
 
 #the purpose of this function is to create
 #a separate log file for each website in the
@@ -74,64 +65,12 @@ def get_values():
         RTTs.append(values[-3].replace('\n',''))
         RTTv2s.append(values[-2].replace('\n',''))
 
-    pR = [x for x in pR if x.replace(',','',1).isDigit()]
-    RTTs = [x for x in pR if x.replace(',','',1).isDigit()]
-    RTTv2s = [x for x in pR if x.replace(',','',1).isDigit()]
+    pR = [x for x in pR if x.replace('.','',1).isdigit()]
+    RTTs = [x for x in RTTs if x.replace('.','',1).isdigit()]
+    RTTv2s = [x for x in RTTv2s if x.replace('.','',1).isdigit()]
 
     f.close()
     return (pR, RTTs, RTTv2s)
-
-
-def get_ping_rtts_log():
-    f = open("xxnlog.txt", 'r')
-    pR = []
-    for line in f.readlines():
-        values = line.split(',')
-        pR.append(values[-1].replace('\n',''))
-
-    for num in pR:
-        if (num == 'pingRTT\r' or num == 'pingRTT' or num == None):
-            pR.remove(num)
-        elif (num == ''):
-            pR.remove('')
-    f.close()
-    return pR
-
-def get_rtts_two_log():
-    f = open("xxnlog.txt", 'r')
-    RTTstwo = []
-    for line in f.readlines():
-        values = line.split(',')
-        RTTstwo.append(values[-2].replace('\n', ''))
-
-    for num in RTTstwo:
-        if (num == 'RTTtwo\r' or num == 'RTTtwo'):
-            RTTstwo.remove(num)
-        elif (num == ''):
-            RTTstwo.remove('')
-    # RTTs.remove('')
-    f.close()
-    return RTTstwo
-
-#will parse through the log.txt file and get the RTTs of all the website
-#in the new iteration of the file the rtt is the third value
-#and the rtt two is the second.
-def get_rtts_log():
-    f = open("xxnlog.txt", 'r')
-    RTTs = []
-    #will only get the RTTs of each website
-    for line in f.readlines():
-        values = line.split(',')
-        RTTs.append(values[-3].replace('\n', ''))
-
-    for num in RTTs:
-        if (num == 'RTT\r' or num == 'RTT'):
-            RTTs.remove(num)
-        elif (num == ''):
-            RTTs.remove('')
-    # RTTs.remove('')
-    f.close()
-    return RTTs
 
 
 def get_location(site):
@@ -187,20 +126,20 @@ def sort_and_cast(arr):
 
     return new_arr
 
-def create_plot2(b, c, z):
+def create_plot2(RTT, PRTT, RTTv2):
     #b is a list of RTTs
     #c will be ping RTT
     #a is a sorted list of RTTs
     #d is a sorted list of ping RTTs
 
-    a = sort_and_cast(b)
-    d = sort_and_cast(c)
-    y = sort_and_cast(z)
-    print(a)
+    a = sort_and_cast(RTT)
+    d = sort_and_cast(PRTT)
+    y = sort_and_cast(RTTv2)
+    #print(a)
     #prints out vals in sorted list of RTTs
-    print("now printing vals:")
-    for val in np.sort(a):
-        print(val)
+    #print("now printing vals:")
+    #for val in np.sort(a):
+        #print(val)
 
     plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
     plt.plot(np.sort(d), np.linspace(0, 1, len(d), endpoint=False))
