@@ -5,13 +5,6 @@ import statsmodels.api as sm
 from scipy import stats
 import collections
 
-
-'''
-per site cdf vs rtt
-compare ping with pycurl
-
-'''
-
 def main():
     RTTs = get_rtts_log()
     pR = get_ping_rtts_log()
@@ -60,31 +53,35 @@ def makeFiles():
         #f = open("/logs/" + site, 'w')
         f = open("C:\\Users\\delah\\PycharmProjects\\untitled1\logs\\" + site, 'w')
         #will add each RTT to a log
-        '''
-        RTT = website_logs[site]
-        for tuple in RTT:
-            f.writelines(RTT[0])
-            f.writelines(',')
-            f.writelines(RTT[1])
-            f.writelines(',')
-            f.writelines(RTT[2])
-            '''
         for RTT in website_logs[site]:
             #f.writelines(RTT[0] + ',\n' + RTT[1] + ',\n' + RTT[2])
             line = "%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2])
             f.writelines(line)
 
-
-
-    '''
-    d['js'].append({'foo', 'bar'})
-    d['js'].append({'other', 'thing'})
-    print(d)
-    '''
     f.close()
 
+def get_values():
+    f = open("xxnlog.txt", 'r')
+    pR = []
+    RTTs = []
+    RTTv2s = []
+
+    for line in f.realines():
+        values = line.split(',')
+        pR.append(values[-1].replace('\n',''))
+        RTTs.append(values[-3].replace('\n',''))
+        RTTv2s.append(values[-2].replace('\n',''))
+
+    pR = [x for x in pR if x.replace(',','',1).isDigit()]
+    RTTs = [x for x in pR if x.replace(',','',1).isDigit()]
+    RTTv2s = [x for x in pR if x.replace(',','',1).isDigit()]
+
+    f.close()
+    return (pR, RTTs, RTTv2s)
+
+
 def get_ping_rtts_log():
-    f = open("xnlog.txt", 'r')
+    f = open("xxnlog.txt", 'r')
     pR = []
     for line in f.readlines():
         values = line.split(',')
