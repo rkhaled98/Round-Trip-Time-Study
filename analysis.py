@@ -127,19 +127,13 @@ def sort_and_cast(arr):
     return new_arr
 
 def create_plot2(RTT, PRTT, RTTv2):
-    #b is a list of RTTs
-    #c will be ping RTT
     #a is a sorted list of RTTs
     #d is a sorted list of ping RTTs
+    #y is a sorted list of second load RTTs
 
     a = sort_and_cast(RTT)
     d = sort_and_cast(PRTT)
     y = sort_and_cast(RTTv2)
-    #print(a)
-    #prints out vals in sorted list of RTTs
-    #print("now printing vals:")
-    #for val in np.sort(a):
-        #print(val)
 
     plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
     plt.plot(np.sort(d), np.linspace(0, 1, len(d), endpoint=False))
@@ -166,10 +160,6 @@ def create_plot_specific_site(site, limx):
     d = sort_and_cast(c)#ping rtt
     y = sort_and_cast(z)#rtt two
 
-    #print(a)
-    #print("now printing vals:")
-    #for val in np.sort(a):
-    #    print(val)
     '''
     average = np.average(a)
     sdev = np.std(a)
@@ -205,50 +195,3 @@ def create_plot_specific_site(site, limx):
 
 makeFiles()
 main()
-
-
-
-
-
-
-#misc code
-
-    #for time in pR:
-    #    if time is "None":
-    #        pR.remove(time)
-    #L = [x for x in pR if x is not None]
-    #filter(None, L)
-    #filter('None', L)
-    #f = open('PINGLOGNUMBERS','w')
-    #for v in L:
-    #    f.write(v + '\n')
-
-'''
-    def create_plot4(sample):
-        quantiles, idx = np.unique(sample, return_inverse=True)
-        counts = np.bincount(idx)
-        # a normal distribution with a mean of 0 and standard deviation of 1
-        n = stats.norm(loc=0, scale=1)
-
-        # draw some random samples from it
-        sample = n.rvs(100)
-
-        # compute the ECDF of the samples
-        ecdf = sm.distributions.ECDF(sample)
-        qe, pe = ecdf(sample)
-
-        # evaluate the theoretical CDF over the same range
-        q = np.linspace(qe[0], qe[-1], 1000)
-        p = n.cdf(q)
-
-        # plot
-        fig, ax = plt.subplots(1, 1)
-        ax.hold(True)
-        ax.plot(q, p, '-k', lw=2, label='Theoretical CDF')
-        ax.plot(qe, pe, '-r', lw=2, label='Empirical CDF')
-        ax.set_xlabel('Quantile')
-        ax.set_ylabel('Cumulative probability')
-        ax.legend(fancybox=True, loc='right')
-
-        plt.show()
-'''
