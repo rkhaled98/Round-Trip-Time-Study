@@ -10,6 +10,8 @@ def main():
     pR = get_ping_rtts_log()
     RTTstwo = get_rtts_two_log()
 
+    #vals = get_values()
+
     print("printing sorted ping rtts")
     print(np.sort(pR))
     #RTTsite = get_rtts_site("www.google.com")
@@ -66,7 +68,7 @@ def get_values():
     RTTs = []
     RTTv2s = []
 
-    for line in f.realines():
+    for line in f.readlines():
         values = line.split(',')
         pR.append(values[-1].replace('\n',''))
         RTTs.append(values[-3].replace('\n',''))
@@ -115,7 +117,7 @@ def get_rtts_two_log():
 #in the new iteration of the file the rtt is the third value
 #and the rtt two is the second.
 def get_rtts_log():
-    f = open("xnlog.txt", 'r')
+    f = open("xxnlog.txt", 'r')
     RTTs = []
     #will only get the RTTs of each website
     for line in f.readlines():
