@@ -10,9 +10,9 @@ def main():
 
     create_plot2(vals[1], vals[0], vals[2])
 
-'''
+    '''
     create_plot_specific_site("www.google.com",100)
-    #   create_plot_specific_site("bet365.com-en-",200)
+    create_plot_specific_site("bet365.com-en-",200)
     create_plot_specific_site("www.imgur.com",40)
     create_plot_specific_site("www.mail.ru",400)
     create_plot_specific_site("www.github.com",150)
