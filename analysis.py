@@ -45,6 +45,10 @@ def makeFiles():
     f.close()
 
 def get_values(site = "aggregatelog.txt"):
+    #by default, if this function gets no parameters,
+    #then it will do an aggregate log. But if the user
+    #specifies a specific website, then it will
+    #go get values for that site.
     if site != "aggregatelog.txt":
         f = open(get_location(site))
     else:
@@ -97,7 +101,7 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     a = sort_and_cast(vals[0])
     y = sort_and_cast(vals[1])
     d = sort_and_cast(vals[2])
-    
+
     plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
     plt.plot(np.sort(d), np.linspace(0, 1, len(d), endpoint=False))
     plt.plot(np.sort(y), np.linspace(0, 1, len(y), endpoint=False))
@@ -106,55 +110,9 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     plt.title('RTTs of top 100 websites and CDF')
     plt.legend(['TTFB - PRET', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
     ax1 = plt.subplot(111)
-    # fig, ax = plt.subplots()
-    # ax.set_xlim([0,2000])
     ax1.set_xlim([0, xlim])
     plt.show()
     return ax1
-
-def create_plot_specific_site(site, limx):
-    RTTsite = get_rtts_site(site)
-    b = sort_and_cast(RTTsite)
-    pRTTsite = get_prtts_site(site)
-    c = sort_and_cast(pRTTsite)
-    RTTtwosite = get_rttstwo_site(site)
-    z = sort_and_cast(RTTtwosite)
-    a = sort_and_cast(b)#rtt
-    d = sort_and_cast(c)#ping rtt
-    y = sort_and_cast(z)#rtt two
-
-    '''
-    average = np.average(a)
-    sdev = np.std(a)
-    print(average)
-    print(np.std(a))
-    plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
-    plt.xlabel('RTT (ms)')
-    plt.ylabel('CDF')
-    plt.title('RTTs of ' + site + ' vs CDF')
-    #ax1 = plt.subplot(111)
-    # fig, ax = plt.subplots()
-    # ax.set_xlim([0,2000])
-    #ax1.set_xlim([average-(sdev), average+(sdev)])
-    plt.show()
-    '''
-    plt.title('RTTs of ' + site + ' vs CDF')
-    plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
-    plt.plot(np.sort(d), np.linspace(0, 1, len(d), endpoint=False))
-    plt.plot(np.sort(y), np.linspace(0, 1, len(y), endpoint=False))
-    plt.xlabel('RTT (ms)')
-    plt.ylabel('CDF')
-    #plt.title('RTTs of top 100 websites and CDF')
-    plt.legend(['TTFB - PRET w/pyCurl', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
-    ax1 = plt.subplot(111)
-    # fig, ax = plt.subplots()
-    # ax.set_xlim([0,2000])
-    ax1.set_xlim([0, limx])
-    plt.show()
-
-    return ax1
-
-
 
 makeFiles()
 main()
