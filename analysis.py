@@ -10,7 +10,10 @@ import os
 def main():
     vals = get_values()
 
-    create_plot2(vals[1], vals[0], vals[2])
+    create_plot_cdf()
+
+    valsgoog = get_values(site = "www.google.com")
+    create_plot_cdf(site = "www.google.com", xlim = 100)
 
     '''
     create_plot_specific_site("www.google.com",100)
@@ -39,7 +42,7 @@ def makeFiles():
         pRTT = values[-1].replace('\n','')
 
         if sitename != 'sitename':
-            website_logs[sitename].append((RTT, pRTT, RTTstwo))
+            website_logs[sitename].append((RTT, RTTstwo, pRTT))
 
     f.close()
     #will go through the sites
@@ -56,8 +59,11 @@ def makeFiles():
 
     f.close()
 
-def get_values():
-    f = open("aggregatelog.txt", 'r')
+def get_values(site = "aggregatelog.txt"):
+    if site != "aggregatelog.txt":
+        f = open(get_location(site))
+    else:
+        f = open("aggregatelog.txt", 'r')
     pR = []
     RTTs = []
     RTTv2s = []
@@ -73,44 +79,11 @@ def get_values():
     RTTv2s = [x for x in RTTv2s if x.replace('.','',1).isdigit()]
 
     f.close()
-    return (pR, RTTs, RTTv2s)
-
+    return (RTTs, RTTv2s, pR)
 
 def get_location(site):
     cwd = os.getcwd()
     return cwd + '/logs/' + site
-
-#gets RTTs of a specific website using the specific log file of that
-#site in the logs directory...
-def get_rtts_site(site):
-    f = open(get_location(site), 'r')
-    RTTs = []
-    #will only get the RTTs of each website
-    for line in f.readlines():
-        #values = line.split(',')
-        RTT = line.split(',')[0]
-        RTTs.append(RTT)
-
-    f.close()
-    return RTTs
-
-def get_prtts_site(site):
-    f = open(get_location(site), 'r')
-    pRTTs = []
-    for line in f.readlines():
-        pRTT = line.split(',')[1]
-        pRTTs.append(pRTT)
-    f.close()
-    return pRTTs
-
-def get_rttstwo_site(site):
-    f = open(get_location(site), 'r')
-    rttstwos = []
-    for line in f.readlines():
-        rttstwo = line.split(',')[2]
-        rttstwos.append(rttstwo)
-    f.close()
-    return rttstwos
 
 #the purpose of this function is to
 #cast each value in the array to a float
@@ -129,14 +102,16 @@ def sort_and_cast(arr):
 
     return new_arr
 
-def create_plot2(RTT, PRTT, RTTv2):
+def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     #a is a sorted list of RTTs
     #d is a sorted list of ping RTTs
     #y is a sorted list of second load RTTs
 
-    a = sort_and_cast(RTT)
-    d = sort_and_cast(PRTT)
-    y = sort_and_cast(RTTv2)
+    vals = get_values(site)
+
+    a = sort_and_cast(vals[0])
+    d = sort_and_cast(vals[2])
+    y = sort_and_cast(vals[1])
 
     plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
     plt.plot(np.sort(d), np.linspace(0, 1, len(d), endpoint=False))
@@ -148,7 +123,7 @@ def create_plot2(RTT, PRTT, RTTv2):
     ax1 = plt.subplot(111)
     # fig, ax = plt.subplots()
     # ax.set_xlim([0,2000])
-    ax1.set_xlim([0, 1000])
+    ax1.set_xlim([0, xlim])
     plt.show()
     return ax1
 
