@@ -1,11 +1,6 @@
 import pycurl
 from datetime import datetime
 import pyping
-#import numpy as np
-#import matplotlib.pyplot as plt
-#import testbench
-
-
 
 f = open('sites', 'r')
 
@@ -28,13 +23,11 @@ print(websites)
 
 f.close()
 
-
 class Data:
     websiteName = ''
     timeOfReading = ''
     dnsTime = ''
     dnsTimeTwo = ''
-    # connectTime = ''
     ttfbTime = ''
     ttfbTimeTwo = ''
     pretTime = ''
@@ -119,9 +112,6 @@ for website in websites:
 
             r = pyping.ping(website)
             data.pingRTT = str(r.avg_rtt)
-            #except:
-            #    print("rafikhaled" + website)
-            #    data.pingRTT = str(0.0)
 
 
             timesArray[websites.index(website)].append(TTFB)
@@ -139,8 +129,8 @@ for website in websites:
 
 timeAverages = []
 
-f = open('xxnlog.txt', 'a')
-x = open('xxnlog.txt', 'r')
+f = open('aggregatelog.txt', 'a')
+x = open('aggregatelog.txt', 'r')
 
 # we want to check if the labels for the values has already been printed,
 # if not then we want to print it since it is the first run on the log.
