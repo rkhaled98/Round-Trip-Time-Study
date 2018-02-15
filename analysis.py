@@ -26,7 +26,7 @@ def main():
 #the purpose of this function is to create
 #a separate log file for each website in the
 #directory folder logs.
-def makeFiles()
+def makeFiles():
     f = open('aggregatelog.txt', 'r')
     website_logs = collections.defaultdict(list)
     for line in f.readlines():
