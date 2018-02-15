@@ -5,6 +5,8 @@ import statsmodels.api as sm
 from scipy import stats
 import collections
 
+import os
+
 def main():
     vals = get_values()
 
@@ -42,9 +44,10 @@ def makeFiles():
     f.close()
     #will go through the sites
     for site in website_logs.keys():
-        #creates a
-        #f = open("/logs/" + site, 'w')
-        f = open("C:\\Users\\delah\\PycharmProjects\\untitled1\logs\\" + site, 'w')
+        #the below gets the cwd and puts the files in
+        #a folder named logs
+        cwd = os.getcwd()
+        f = open(cwd + '/logs/' + site, 'w')
         #will add each RTT to a log
         for RTT in website_logs[site]:
             #f.writelines(RTT[0] + ',\n' + RTT[1] + ',\n' + RTT[2])
@@ -74,8 +77,8 @@ def get_values():
 
 
 def get_location(site):
-    return "C:\\Users\\delah\\PycharmProjects\\untitled1\logs\\" + site
-
+    cwd = os.getcwd()
+    return cwd + '/logs/' + site
 
 #gets RTTs of a specific website using the specific log file of that
 #site in the logs directory...
