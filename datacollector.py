@@ -113,7 +113,6 @@ for website in websites:
             r = pyping.ping(website)
             data.pingRTT = str(r.avg_rtt)
 
-
             timesArray[websites.index(website)].append(TTFB)
 
             # this is an important line which later
@@ -156,24 +155,3 @@ for datum in dataArray:
     f.write('\n')
 
 f.close()
-
-# write a piece of code to go through the log and get data for the cdf plot
-# namely, we will need the RTT of the website.
-
-# RTT currently resides at the end of the split array
-# we want to create an array of all the RTT values
-f = open('log.txt', 'r')
-RTTs = []
-for line in f.readlines():
-    values = line.split(',')
-    # there is a newline after the last val, so remove it
-    values[-1] = values[-1].replace('\n','')
-    # this will ignore values that are empty or contain labeling
-    if not(values[-1] == '' or values[-1] == 'RTT'):
-        RTTs.append(values[-1].replace('\n', ''))
-
-
-
-f.close()
-print('\n')
-print(RTTs)
