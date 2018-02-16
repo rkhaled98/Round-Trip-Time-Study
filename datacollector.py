@@ -12,9 +12,7 @@ websites = []
 # omitted.
 for website in f.readlines():
     website = website.replace('\n', '')
-    #if 'https://' in website:
     website = website.replace("https://",'')
-    #elif 'http://' in website:
     website = website.replace("http://",'')
     print(website)
     websites.append(website)
@@ -110,7 +108,7 @@ for website in websites:
             #begin working with the system ping
             r = ''
 
-            r = pyping.ping(website)
+            r = pyping.ping(website.replace('www.',''))
             data.pingRTT = str(r.avg_rtt)
 
             timesArray[websites.index(website)].append(TTFB)
