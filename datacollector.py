@@ -66,14 +66,7 @@ for website in websites:
             data.timeOfReading = str(datetime.now())
 
             content = c.perform()
-            """#c.getinfo(pycurl.NAMELOOKUP_TIME) is dns time
-            c.getinfo(pycurl.CONNECT_TIME) is tcp/ip 3 way time
-            c.getinfo(pycurl.TOTAL_TIME) is last request time
-            dns should be smaller than connection, and connect should be smaller
-            there is a name lookup portion, and the connection part establishes
-            a connection with the server only on the first connection. perhaps
-            save it and subtract from the start transfer time. save the dns, connect,
-            and ttfb and subtract the ttfb from dns and connect"""
+
             TTFB = c.getinfo(pycurl.STARTTRANSFER_TIME) * 1000
             PRET = c.getinfo(pycurl.PRETRANSFER_TIME) * 1000
             DNS = c.getinfo(pycurl.CONNECT_TIME) * 1000
