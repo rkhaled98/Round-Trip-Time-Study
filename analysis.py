@@ -111,6 +111,7 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     plt.legend(['TTFB - PRET', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
     ax1 = plt.subplot(111)
     ax1.set_xlim([0, xlim])
+    ax1.grid(color='#C0C0C0', linestyle='-', linewidth=1,)
     plt.show()
     return ax1
 
