@@ -9,9 +9,11 @@ import os
 
 def main():
     vals = get_values()
-
+    create_plot_all()
     create_plot_cdf()
     create_plot_cdf(site = "www.google.com", xlim = 100)
+    create_plot_cdf(site = "www.bankofamerica.com")
+
 
 #the purpose of this function is to create
 #a separate log file for each website in the
@@ -90,6 +92,22 @@ def sort_and_cast(arr):
             print('error')
 
     return new_arr
+
+def create_plot_all():
+    wd = os.getcwd() + "/logs/"
+    sites = os.listdir(wd)
+    for site in sites:
+        f = open(wd + site)
+        values = []
+        for line in f.readlines():
+            valuesLine = line.split(',')
+            for value in valuesLine:
+                values.append(value)
+        values = sort_and_cast(values)
+        max = np.amax(values)
+        print(max)
+        f.close()
+
 
 def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     #a is a sorted list of RTTs
