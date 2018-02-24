@@ -9,6 +9,7 @@ import os
 
 def main():
     vals = get_values()
+    create_plot_cdf(site = "www.buzzfeed.com", xlim = 200)
     create_plot_all()
     create_plot_cdf()
     create_plot_cdf(site = "www.google.com", xlim = 100)
@@ -105,6 +106,8 @@ def create_plot_all():
                 values.append(value)
         values = sort_and_cast(values)
         max = np.amax(values)
+        perc = np.percentile(values, 95)
+        create_plot_cdf(site, perc)
         print(max)
         f.close()
 
@@ -128,7 +131,7 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     if site == 'aggreatelog.txt':
         plt.title('RTTs of top 100 websites and CDF')
     else:
-        plt.title('RTT comparison of %s', site)
+        plt.title('RTT comparison of %s and CDF' % site)
     plt.legend(['TTFB - PRET', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
     ax1 = plt.subplot(111)
     ax1.set_xlim([0, xlim])
