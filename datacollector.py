@@ -2,7 +2,7 @@ import pycurl
 from datetime import datetime
 import pyping
 
-f = open('sites', 'r')
+f = open('testsites', 'r')
 
 websites = []
 
@@ -119,8 +119,8 @@ for website in websites:
 
 timeAverages = []
 
-f = open('aggregatelog.txt', 'a')
-x = open('aggregatelog.txt', 'r')
+f = open('testaggregatelog.txt', 'a')
+x = open('testaggregatelog.txt', 'r')
 
 # we want to check if the labels for the values has already been printed,
 # if not then we want to print it since it is the first run on the log.
