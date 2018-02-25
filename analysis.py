@@ -10,11 +10,18 @@ import os
 def main():
     vals = get_values()
     #create_plot_all(savefig = True)
-    create_plot_cdf(showfig = True)
-    create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    create_plot_cdf(showfig = True, day = "2018-02-12 Monday")
-    create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
+    #create_plot_cdf(showfig = True)
+    #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
+    #create_plot_cdf(showfig = True, day = "2018-02-12 Monday")
+    #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
     create_plot_cdf(site = "www.google.com", xlim = 100, showfig = True)
+    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-11", showfig = True)
+    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-12", showfig = True)
+    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-13", showfig = True)
+    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-14", showfig = True)
+    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-16", showfig = True)
+    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-17", showfig = True)
+    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-18", showfig = True)
 
 
 #the purpose of this function is to create
@@ -26,12 +33,13 @@ def makeFiles():
     for line in f.readlines():
         values = line.split(',')
         sitename = values[1].replace("https://", "").replace("/", "-")
+        time = values[0]
         RTT = values[-3].replace('\n','')
         RTTstwo = values[-2].replace('\n','')
         pRTT = values[-1].replace('\n','')
 
         if sitename != 'sitename':
-            website_logs[sitename].append((RTT, RTTstwo, pRTT))
+            website_logs[sitename].append((time, RTT, RTTstwo, pRTT))
 
     f.close()
     #will go through the sites
@@ -43,7 +51,7 @@ def makeFiles():
         #will add each RTT to a log
         for RTT in website_logs[site]:
             #f.writelines(RTT[0] + ',\n' + RTT[1] + ',\n' + RTT[2])
-            line = "%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2])
+            line = "%s,%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2], RTT[3])
             f.writelines(line)
 
     f.close()
