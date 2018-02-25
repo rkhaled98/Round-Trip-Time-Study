@@ -9,11 +9,12 @@ import os
 
 def main():
     vals = get_values()
-    create_plot_cdf(site = "www.buzzfeed.com", xlim = 200)
-    create_plot_all()
-    create_plot_cdf()
-    create_plot_cdf(site = "www.google.com", xlim = 100)
-    create_plot_cdf(site = "www.bankofamerica.com")
+    #create_plot_all(savefig = True)
+    create_plot_cdf(showfig = True)
+    create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
+    create_plot_cdf(showfig = True, day = "2018-02-12 Monday")
+    create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
+    create_plot_cdf(site = "www.google.com", xlim = 100, showfig = True)
 
 
 #the purpose of this function is to create
@@ -47,7 +48,7 @@ def makeFiles():
 
     f.close()
 
-def get_values(site = "aggregatelog.txt"):
+def get_values(site = "aggregatelog.txt", day = ""):
     #by default, if this function gets no parameters,
     #then it will do an aggregate log. But if the user
     #specifies a specific website, then it will
@@ -62,9 +63,15 @@ def get_values(site = "aggregatelog.txt"):
 
     for line in f.readlines():
         values = line.split(',')
-        pR.append(values[-1].replace('\n',''))
-        RTTs.append(values[-3].replace('\n',''))
-        RTTv2s.append(values[-2].replace('\n',''))
+        if day == "" :
+            RTTs.append(values[-3].replace('\n',''))
+            RTTv2s.append(values[-2].replace('\n',''))
+            pR.append(values[-1].replace('\n',''))
+        elif day[:10] in values[0]:
+            RTTs.append(values[-3].replace('\n',''))
+            RTTv2s.append(values[-2].replace('\n',''))
+            pR.append(values[-1].replace('\n',''))
+
 
     pR = [x for x in pR if x.replace('.','',1).isdigit()]
     RTTs = [x for x in RTTs if x.replace('.','',1).isdigit()]
@@ -94,9 +101,10 @@ def sort_and_cast(arr):
 
     return new_arr
 
-def create_plot_all():
+def create_plot_all(savefig = False, showfig = False):
     wd = os.getcwd() + "/logs/"
     sites = os.listdir(wd)
+    create_plot_cdf()
     for site in sites:
         f = open(wd + site)
         values = []
@@ -107,17 +115,18 @@ def create_plot_all():
         values = sort_and_cast(values)
         max = np.amax(values)
         perc = np.percentile(values, 95)
-        create_plot_cdf(site, perc)
+        create_plot_cdf(site, perc, savefig, showfig)
         print(max)
         f.close()
 
 
-def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
+def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000, savefig = False, showfig = False
+, day = ""):
     #a is a sorted list of RTTs
-    #d is a sorted list of ping RTTs
     #y is a sorted list of second load RTTs
+    #d is a sorted list of ping RTTs
 
-    vals = get_values(site)
+    vals = get_values(site, day)
 
     a = sort_and_cast(vals[0])
     y = sort_and_cast(vals[1])
@@ -128,16 +137,20 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000):
     plt.plot(np.sort(y), np.linspace(0, 1, len(y), endpoint=False))
     plt.xlabel('RTT (ms)')
     plt.ylabel('CDF')
-    if site == 'aggreatelog.txt':
-        plt.title('RTTs of top 100 websites and CDF')
+    if site == 'aggregatelog.txt':
+        plt.title('Aggregate CDF for RTTs of the top 100 websites (%i) on %s'
+        % (len(a) + len(y) + len(d), day))
     else:
-        plt.title('RTT comparison of %s and CDF' % site)
+        plt.title('CDF for RTTs of %s (%i) on %s'
+        % (site, len(a) + len(y) + len(d), day))
     plt.legend(['TTFB - PRET', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
     ax1 = plt.subplot(111)
     ax1.set_xlim([0, xlim])
     ax1.grid(color='#C0C0C0', linestyle='-', linewidth=1,)
-    plt.show()
+    plt.savefig('graphs/CDF OF RTTs ' + site.replace('www.','') + '.png') if savefig else {}
+    plt.show() if showfig else {plt.close()}
     return ax1
+
 
 makeFiles()
 main()
