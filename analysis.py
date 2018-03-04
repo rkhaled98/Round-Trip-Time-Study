@@ -16,13 +16,6 @@ def main():
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
     create_plot_cdf(site = "www.google.com", xlim = 100, showfig = True)
     create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-11", showfig = True)
-    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-12", showfig = True)
-    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-13", showfig = True)
-    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-14", showfig = True)
-    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-16", showfig = True)
-    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-17", showfig = True)
-    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-18", showfig = True)
-
 
 #the purpose of this function is to create
 #a separate log file for each website in the
@@ -127,30 +120,26 @@ def create_plot_all(savefig = False, showfig = False):
         print(max)
         f.close()
 
-
 def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000, savefig = False, showfig = False
 , day = ""):
-    #a is a sorted list of RTTs
-    #y is a sorted list of second load RTTs
-    #d is a sorted list of ping RTTs
 
     vals = get_values(site, day)
 
-    a = sort_and_cast(vals[0])
-    y = sort_and_cast(vals[1])
-    d = sort_and_cast(vals[2])
+    RTT = sort_and_cast(vals[0])
+    RTTv2 = sort_and_cast(vals[1])
+    pR = sort_and_cast(vals[2])
 
-    plt.plot(np.sort(a), np.linspace(0, 1, len(a), endpoint=False))
-    plt.plot(np.sort(d), np.linspace(0, 1, len(d), endpoint=False))
-    plt.plot(np.sort(y), np.linspace(0, 1, len(y), endpoint=False))
+    plt.plot(np.sort(RTT), np.linspace(0, 1, len(RTT), endpoint=False))
+    plt.plot(np.sort(pR), np.linspace(0, 1, len(pR), endpoint=False))
+    plt.plot(np.sort(RTTv2), np.linspace(0, 1, len(RTTv2), endpoint=False))
     plt.xlabel('RTT (ms)')
     plt.ylabel('CDF')
     if site == 'aggregatelog.txt':
         plt.title('Aggregate CDF for RTTs of the top 100 websites (%i) on %s'
-        % (len(a) + len(y) + len(d), day))
+        % (len(RTT) + len(RTTv2) + len(pR), day))
     else:
         plt.title('CDF for RTTs of %s (%i) on %s'
-        % (site, len(a) + len(y) + len(d), day))
+        % (site, len(RTT) + len(RTTv2) + len(pR), day))
     plt.legend(['TTFB - PRET', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
     ax1 = plt.subplot(111)
     ax1.set_xlim([0, xlim])
