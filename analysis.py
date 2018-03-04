@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-import statsmodels.api as sm
 from scipy import stats
 import collections
 
@@ -14,8 +13,11 @@ def main():
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
     #create_plot_cdf(showfig = True, day = "2018-02-12 Monday")
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
-    create_plot_cdf(site = "www.google.com", xlim = 100, showfig = True)
-    create_plot_cdf(site = "www.google.com", xlim = 100, day = "2018-02-11", showfig = True)
+    create_plot_cdf(site = "www.google.com", showfig = True)
+    create_plot_cdf(site = "www.google.com", showfig = True)
+
+def get(site):
+    print(site)
 
 #the purpose of this function is to create
 #a separate log file for each website in the
@@ -120,7 +122,7 @@ def create_plot_all(savefig = False, showfig = False):
         print(max)
         f.close()
 
-def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000, savefig = False, showfig = False
+def create_plot_cdf(site = "aggregatelog.txt", savefig = False, showfig = False
 , day = ""):
 
     vals = get_values(site, day)
@@ -142,7 +144,10 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000, savefig = False, sho
         % (site, len(RTT) + len(RTTv2) + len(pR), day))
     plt.legend(['TTFB - PRET', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
     ax1 = plt.subplot(111)
-    ax1.set_xlim([0, xlim])
+    total = [x for x in RTT] + [x for x in RTTv2] + [x for x in pR]
+    perc = np.percentile(total, 95)
+
+    ax1.set_xlim([0, perc])
     ax1.grid(color='#C0C0C0', linestyle='-', linewidth=1,)
     plt.savefig('graphs/CDF OF RTTs ' + site.replace('www.','') + '.png') if savefig else {}
     plt.show() if showfig else {plt.close()}
@@ -150,4 +155,3 @@ def create_plot_cdf(site = "aggregatelog.txt", xlim = 1000, savefig = False, sho
 
 
 makeFiles()
-main()
