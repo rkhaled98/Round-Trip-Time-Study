@@ -30,6 +30,11 @@ class Data:
     ttfbTimeTwo = ''
     pretTime = ''
     pretTimeTwo = ''
+    #there is a reason that RTTthree is before the first
+    #RTT. this is because when adding additional
+    #RTT calculations after the second, we want to
+    #maintain the position of RTT as -3, RTTtwo as -2, pr as -1
+    RTTthree = ''
     RTT = ''
     RTTtwo = ''
     pingRTT = ''
@@ -86,12 +91,23 @@ for website in websites:
             DNStwo = c.getinfo(pycurl.CONNECT_TIME) * 1000
             RTTtwo = TTFBtwo - PRETtwo
 
+            #third load!!
+            c.setopt(pycurl.URL, website)
+            c.setopt(pycurl.FOLLOWLOCATION, 1)
+            content = c.perform()
+
+            TTFBthree = c.getinfo(pycurl.STARTTRANSFER_TIME) * 1000
+            PRETthree = c.getinfo(pycurl.PRETRANSFER_TIME) * 1000
+            DNSthree = c.getinfo(pycurl.CONNECT_TIME) * 1000
+            RTTthree = TTFBthree - PRETthree
+
             data.ttfbTime = str(TTFB)
             data.ttfbTimeTwo = str(TTFBtwo)
             data.pretTime = str(PRET)
             data.pretTimeTwo = str(PRETtwo)
             data.dnsTime = str(DNS)
             data.dnsTimeTwo = str(DNStwo)
+            data.RTTthree = str(RTTthree)
             data.RTT = str(RTT)
             data.RTTtwo = str(RTTtwo)
 
@@ -124,8 +140,8 @@ x = open('testaggregatelog.txt', 'r')
 
 # we want to check if the labels for the values has already been printed,
 # if not then we want to print it since it is the first run on the log.
-if(x.readline() != 'tstamp,sitename,dns time,dns time two,pret time,pret time two,ttfb time,ttfb time two,RTT,RTTtwo,pingRTT\n'):
-    f.write('tstamp,sitename,dns time,dns time two,pret time,pret time two,ttfb time,ttfb time two,RTT,RTTtwo,pingRTT\n')
+if(x.readline() != 'tstamp,sitename,dns time,dns time two,pret time,pret time two,ttfb time,ttfb time two,RTTthree,RTT,RTTtwo,pingRTT\n'):
+    f.write('tstamp,sitename,dns time,dns time two,pret time,pret time two,ttfb time,ttfb time two,RTTthree,RTT,RTTtwo,pingRTT\n')
 
 x.close()
 
@@ -139,6 +155,7 @@ for datum in dataArray:
     line += ',' + datum.pretTimeTwo
     line += ',' + datum.ttfbTime
     line += ',' + datum.ttfbTimeTwo
+    line += ',' + datum.RTTthree
     line += ',' + datum.RTT
     line += ',' + datum.RTTtwo
     line += ',' + datum.pingRTT

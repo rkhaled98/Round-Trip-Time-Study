@@ -153,5 +153,5 @@ def create_plot_cdf(site = "aggregatelog.txt", savefig = False, showfig = False
     plt.show() if showfig else {plt.close()}
     return ax1
 
-
+main()
 makeFiles()
