@@ -47,7 +47,8 @@ def makeFiles():
         #will add each RTT to a log
         for RTT in website_logs[site]:
             #f.writelines(RTT[0] + ',\n' + RTT[1] + ',\n' + RTT[2])
-            line = "%s,%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2], RTT[3])
+            line = "%s,%s,%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2], RTT[3], RTT[4])
+            #adding time, rtts4, rtt, rttstwo, and prtt
             f.writelines(line)
 
     f.close()
