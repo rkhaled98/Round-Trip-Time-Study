@@ -35,7 +35,7 @@ def makeFiles():
         pRTT = values[-1].replace('\n','')
 
         if sitename != 'sitename':
-            website_logs[sitename].append((time, RTT, RTTstwo, pRTT))
+            website_logs[sitename].append((time, RTTsfour, RTT, RTTstwo, pRTT))
 
     f.close()
     #will go through the sites
