@@ -29,6 +29,7 @@ def makeFiles():
         values = line.split(',')
         sitename = values[1].replace("https://", "").replace("/", "-")
         time = values[0]
+        RTTsfour = values[-4].replace['\n','']
         RTT = values[-3].replace('\n','')
         RTTstwo = values[-2].replace('\n','')
         pRTT = values[-1].replace('\n','')
