@@ -29,13 +29,13 @@ def makeFiles():
         values = line.split(',')
         sitename = values[1].replace("https://", "").replace("/", "-")
         time = values[0]
-        RTTsfour = values[-4].replace['\n','']
+        RTTsthree = values[-4].replace['\n','']
         RTT = values[-3].replace('\n','')
         RTTstwo = values[-2].replace('\n','')
         pRTT = values[-1].replace('\n','')
 
         if sitename != 'sitename':
-            website_logs[sitename].append((time, RTTsfour, RTT, RTTstwo, pRTT))
+            website_logs[sitename].append((time, RTTsthree, RTT, RTTstwo, pRTT))
 
     f.close()
     #will go through the sites
@@ -48,7 +48,7 @@ def makeFiles():
         for RTT in website_logs[site]:
             #f.writelines(RTT[0] + ',\n' + RTT[1] + ',\n' + RTT[2])
             line = "%s,%s,%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2], RTT[3], RTT[4])
-            #adding time, rtts4, rtt, rttstwo, and prtt
+            #adding time, rtts3, rtt, rttstwo, and prtt
             f.writelines(line)
 
     f.close()
@@ -62,10 +62,10 @@ def get_values(site = "aggregatelog.txt", day = ""):
         f = open(get_location(site))
     else:
         f = open("aggregatelog.txt", 'r')
-    pR = []
+    RTTv3s = []
     RTTs = []
     RTTv2s = []
-
+    pR = []
     for line in f.readlines():
         values = line.split(',')
         if day == "" :
