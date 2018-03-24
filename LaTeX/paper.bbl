@@ -21,6 +21,12 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{pypingdocs}
+\BIBentryALTinterwordspacing
+M.~D. Cowles. pyping 0.0.5. [Online]. Available:
+  \url{https://pypi.python.org/pypi/pyping/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{pycurldocs}
 \BIBentryALTinterwordspacing
 (2016, Dec) Pycurl 7.43.0.1. [Online]. Available: \url{http://pycurl.io/}
