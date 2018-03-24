@@ -11,7 +11,7 @@ def main():
     #create_plot_all(savefig = True)
     #create_plot_cdf(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    create_plot_cdf(showfig = True)
+    create_plot_cdf(showfig = True, savefig = True)
     create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
     create_plot_cdf(site = "www.google.com", showfig = True)
     create_plot_cdf(site = "www.google.com", showfig = True)

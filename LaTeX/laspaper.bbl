@@ -1,27 +1,8 @@
-@electronic{pycurldocs,
-  title={PYCURL 7.43.0.1},
-  url={http://pycurl.io/},
-  month={Dec},
-  year={2016}
-}
-
-@electronic{curloptfollowlocationdocs,
-  title={CURLOPT_FOLLOWLOCATION explained},
-  url={https://curl.haxx.se/libcurl/c/CURLOPT_FOLLOWLOCATION.html},
-
-}
-
-@ARTICLE{1,
-author={Moriarty, David E. and Risto Miikkulainen},
-title={Evolving Obstacle Avoidance Behavior in a Robot Arm},
-year={1996}}
-
-@ARTICLE{2,
-author = {Moriarty, David E. and Risto Miikkulainen},
-title = {Hierarchical Evolution of Neural Networks},
-journal = {Proceedings of the 1998 IEEE Conference on Evolutionary Computation},
-year = {1998},
-doi = {10.1109/icec.1998.699793}
+@ARTICLE{lol
+  title = {PYCURL 7.43.0.1},
+  url = {http://pycurl.io/},
+  month = {Dec},
+  year = {2016}
 }
 
 @inproceedings{Neves2011,

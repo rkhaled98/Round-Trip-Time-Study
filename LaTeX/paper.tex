@@ -125,7 +125,7 @@ Figure~\ref{fig:example} is an example figure.
 
 \begin{figure}[t]
 \centering
-    \includegraphics[width=0.41\textwidth]{fig/example-fig}
+    \includegraphics[width=0.41\textwidth]{fig/aggregategraph}
      \caption{Example figure}
       \label{fig:example}
 \end{figure}
@@ -140,10 +140,11 @@ Related work.
 
 % explain what we've done in order to ensure reproducibility
 
-Collection of data was conducted using two Python libraries: pyping and PycURL. PycURL is a Python interface to libcurl, which is a client-side URL transfer library. PycURL allows one to fetch various objects identified by a URL: in our case, objects corresponding to the URLs of various websites hosted on servers across the world. [1]
+Collection of data was conducted using two Python libraries: pyping and PycURL. PycURL is a Python interface to libcurl, which is a client-side URL transfer library. PycURL allows one to fetch various objects identified by a URL: in our case, objects corresponding to the URLs of various websites hosted on servers across the world \cite{pycurldocs}.
 
-First, we wanted to calculate the RTT as measured by a calculation involving, at the highest level, a website’s pretransfer time and time to first byte: the RTT was calculated as the pretransfer time subtracted from the time to first byte, both of which were obtained with PycURL. Knowing this, it is as simple as creating a new Curl Object from PycURL, setting the relevant options, i.e. the name of the website and the FOLLOWLOCATION to 1. Setting the FOLLOWLOCATION to 1 tells the library to follow any Location: header that the server sends as part of a HTTP header in a 3xx response. The Location: header can specify a relative or an absolute URL to follow. The library will issue another request for the new URL and follow new Location: headers all the way until no more such headers are returned. [2]
+First, we wanted to calculate the RTT as measured by a calculation involving, at the highest level, a website’s pretransfer time and time to first byte: the RTT was calculated as the pretransfer time subtracted from the time to first byte, both of which were obtained with PycURL. To do this, it is as simple as creating a new Curl Object from PycURL, setting the relevant options, i.e. the name of the website and the FOLLOWLOCATION to 1. Setting the FOLLOWLOCATION to 1 tells the library to follow any Location: header that the server sends as part of a HTTP header in a 3xx response. The Location: header can specify a relative or an absolute URL to follow. The library will issue another request for the new URL and follow new Location: headers all the way until no more such headers are returned \cite{curloptfollowlocationdocs}.
 
+The next calculation we wanted to observe is the RTT on the second load of a website. This calculation has the same equation of RTT as described above, except with the appropriate second load of the pretransfer time and the time to first byte. In order to measure this, we took advantage of PycURL allowing for reuse of Curl Objects: one only needs to reset the relevant options identically to the first load and can then measure the speed of the connection 
 
 \section{Evaluation}
 \label{sec:evaluation}
@@ -171,7 +172,7 @@ Conclusions.
 % produce the bibliography for the citations in your paper.
 \bibliographystyle{IEEEtran}
 %\small{
-\bibliography{IEEEabrv,laspaper}
+\bibliography{laspaper}
 %\balancecolumns % must be placed in the laspaper.bbl right where you want the column break to occur
 %}
 
