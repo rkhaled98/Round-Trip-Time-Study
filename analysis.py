@@ -146,8 +146,8 @@ def create_plot_cdf(site = "aggregatelog.txt", savefig = False, showfig = False
     plt.xlabel('RTT (ms)')
     plt.ylabel('CDF')
     if site == 'aggregatelog.txt':
-        plt.title('Aggregate CDF for RTTs of the top 100 websites (%i) on %s'
-        % (len(RTTv3) + len(RTT) + len(RTTv2) + len(pR), day))
+        plt.title('Aggregate CDF for RTTs of the top 100 websites (%i)' #on %s
+        % (len(RTTv3) + len(RTT) + len(RTTv2) + len(pR)))
     else:
         plt.title('CDF for RTTs of %s (%i) on %s'
         % (site,len(RTTv3) +  len(RTT) + len(RTTv2) + len(pR), day))
