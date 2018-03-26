@@ -53,15 +53,15 @@ def makeFiles():
 
     f.close()
 
-def get_values(site = "aggregatelog.txt", day = ""):
+def get_values(site = "newtestaggregatelog.txt", day = ""):
     #by default, if this function gets no parameters,
     #then it will do an aggregate log. But if the user
     #specifies a specific website, then it will
     #go get values for that site.
-    if site != "aggregatelog.txt":
+    if site != "newtestaggregatelog.txt":
         f = open(get_location(site))
     else:
-        f = open("aggregatelog.txt", 'r')
+        f = open("newtestaggregatelog.txt", 'r')
     RTTv3s = []
     RTTs = []
     RTTv2s = []
@@ -127,7 +127,7 @@ def create_plot_all(savefig = False, showfig = False):
         print(max)
         f.close()
 
-def create_plot_cdf(site = "aggregatelog.txt", savefig = False, showfig = False
+def create_plot_cdf(site = "newtestaggregatelog.txt", savefig = False, showfig = False
 , day = ""):
 
     vals = get_values(site, day)
@@ -145,7 +145,7 @@ def create_plot_cdf(site = "aggregatelog.txt", savefig = False, showfig = False
     plt.plot(np.sort(RTTv3), np.linspace(0, 1, len(RTTv2), endpoint=False))
     plt.xlabel('RTT (ms)')
     plt.ylabel('CDF')
-    if site == 'aggregatelog.txt':
+    if site == 'newtestaggregatelog.txt':
         plt.title('Aggregate CDF for RTTs of the top 100 websites (%i)' #on %s
         % (len(RTTv3) + len(RTT) + len(RTTv2) + len(pR)))
     else:
