@@ -9,15 +9,22 @@ import collections
 import os
 
 def main():
-    vals = get_values()
+    clean_csv()
+    #vals = get_values()
     #create_plot_all(savefig = True)
     #create_plot_cdf(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    create_plot_violin()
+    #create_plot_violin()
     #create_plot_cdf(showfig = True, savefig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
     #create_plot_cdf(site = "www.google.com", showfig = True)
     #create_plot_cdf(site = "www.google.com", showfig = True)
+
+def clean_csv(file = "newtestaggregatelog.txt"):
+# get the important variables into the dataFrame.
+    df = pd.read_csv(file)
+    df = df.loc[:, ['tstamp', 'sitename', 'RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
+    print(df)
 
 def get(site):
     print(site)
