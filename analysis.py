@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
+import pandas as pd
 
 from scipy import stats
 import collections
@@ -11,10 +13,11 @@ def main():
     #create_plot_all(savefig = True)
     #create_plot_cdf(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    create_plot_cdf(showfig = True, savefig = True)
-    create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
-    create_plot_cdf(site = "www.google.com", showfig = True)
-    create_plot_cdf(site = "www.google.com", showfig = True)
+    create_plot_violin()
+    #create_plot_cdf(showfig = True, savefig = True)
+    #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
+    #create_plot_cdf(site = "www.google.com", showfig = True)
+    #create_plot_cdf(site = "www.google.com", showfig = True)
 
 def get(site):
     print(site)
@@ -52,6 +55,8 @@ def makeFiles():
             f.writelines(line)
 
     f.close()
+
+
 
 def get_values(site = "newtestaggregatelog.txt", day = ""):
     #by default, if this function gets no parameters,
@@ -162,6 +167,32 @@ def create_plot_cdf(site = "newtestaggregatelog.txt", savefig = False, showfig =
     plt.savefig('graphs/CDF OF RTTs ' + site.replace('www.','') + '.png') if savefig else {}
     plt.show() if showfig else {plt.close()}
     return ax1
+
+def create_plot_violin(site = "newtestaggregatelog.txt", day = ""):
+    vals = get_values(site, day)
+
+    RTTv3 = sort_and_cast(vals[0])
+    RTT = sort_and_cast(vals[1])
+    RTTv2 = sort_and_cast(vals[2])
+    pR = sort_and_cast(vals[3])
+
+    sns.set_style("whitegrid")
+    #tips = sns.load_dataset(RTTv3)
+
+
+
+    ax = plt.subplot(111)
+
+    total = [x for x in RTTv3] #+ [x for x in RTT] + [x for x in RTTv2] + [x for x in pR]
+    perc = np.percentile(total, 95)
+
+    ax.set_xlim([0, perc])
+
+
+    ax = sns.violinplot(x=RTTv3)
+    plt.show()
+
+    return ax
 
 makeFiles()
 main()
