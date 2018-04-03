@@ -9,12 +9,13 @@ import collections
 import os
 
 def main():
-    clean_csv(site = "www.google.com")
+    #clean_csv(site = "www.google.com")
+    #create_plot_cdf("www.google.com", showfig = True)
     #vals = get_values()
     #create_plot_all(savefig = True)
     #create_plot_cdf(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    #create_plot_violin()
+    create_plot_violin("www.google.com")
     #create_plot_cdf(showfig = True, savefig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
     #create_plot_cdf(site = "www.google.com", showfig = True)
@@ -25,11 +26,13 @@ def clean_csv(site = "aggregate"):
     df = pd.read_csv("newtestaggregatelog.txt")
     df = df.loc[:, ['tstamp', 'sitename', 'RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
     df = df[df.sitename.str.match('^' + site + '$')] if site != "aggregate" else {} #regex for getting the exact site if specified
-    print(df)
+    #print(df)
+    return df
 
 def get(site):
     print(site)
 
+'''
 #the purpose of this function is to create
 #a separate log file for each website in the
 #directory folder logs.
@@ -63,8 +66,8 @@ def makeFiles():
             f.writelines(line)
 
     f.close()
-
-
+'''
+'''
 
 def get_values(site = "newtestaggregatelog.txt", day = ""):
     #by default, if this function gets no parameters,
@@ -101,10 +104,11 @@ def get_values(site = "newtestaggregatelog.txt", day = ""):
     f.close()
     return (RTTv3s, RTTs, RTTv2s, pR)
 
+
 def get_location(site):
     cwd = os.getcwd()
     return cwd + '/logs/' + site
-
+'''
 #the purpose of this function is to
 #cast each value in the array to a float
 #and then add this to a new array,
@@ -142,32 +146,45 @@ def create_plot_all(savefig = False, showfig = False):
 
 def create_plot_cdf(site = "newtestaggregatelog.txt", savefig = False, showfig = False
 , day = ""):
-
+    '''
     vals = get_values(site, day)
 
     RTTv3 = sort_and_cast(vals[0])
     RTT = sort_and_cast(vals[1])
     RTTv2 = sort_and_cast(vals[2])
     pR = sort_and_cast(vals[3])
+    '''
+    vals = clean_csv(site)
+    vals = vals.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
+    vals.RTT = vals.RTT.sort_values()
+    vals.RTTtwo = vals.RTTtwo.sort_values()
+    vals.RTTthree = vals.RTTthree.sort_values()
+    vals.pingRTT = vals.pingRTT.sort_values()
 
+    cum_dist = np.linspace(0.,1.,len(vals.RTT))
+    ser_cdf = pd.Series(cum_dist, index=vals.RTT)
 
+    ser_cdf.plot(drawstyle='steps')
 
-    plt.plot(np.sort(pR), np.linspace(0, 1, len(pR), endpoint=False))
-    plt.plot(np.sort(RTT), np.linspace(0, 1, len(RTT), endpoint=False))
-    plt.plot(np.sort(RTTv2), np.linspace(0, 1, len(RTTv2), endpoint=False))
-    plt.plot(np.sort(RTTv3), np.linspace(0, 1, len(RTTv2), endpoint=False))
+    vals.plot()
+    '''
+    plt.plot(np.sort(vals.pingRTT), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
+    plt.plot(np.sort(vals.RTT), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
+    plt.plot(np.sort(vals.RTTtwo), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
+    plt.plot(np.sort(vals.RTTthree), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
+    '''
     plt.xlabel('RTT (ms)')
     plt.ylabel('CDF')
     if site == 'newtestaggregatelog.txt':
         plt.title('Aggregate CDF for RTTs of the top 100 websites (%i)' #on %s
-        % (len(RTTv3) + len(RTT) + len(RTTv2) + len(pR)))
+        % (vals.shape[0]))
     else:
         plt.title('CDF for RTTs of %s (%i) on %s'
-        % (site,len(RTTv3) +  len(RTT) + len(RTTv2) + len(pR), day))
+        % (site, vals.shape[0], day))
     #plt.legend(['TTFB - PRET', 'ping RTT', 'TTFB - PRET 2ND LOAD'])
     plt.legend([ 'ping RTT', 'TTFB - PRET', 'TTFB - PRET 2ND LOAD', 'TTFB - PRET 3RD LOAD'])
     ax1 = plt.subplot(111)
-    total = [x for x in RTTv3] + [x for x in RTT] + [x for x in RTTv2] + [x for x in pR]
+    total = vals.sum(axis=1)
     perc = np.percentile(total, 95)
 
     ax1.set_xlim([0, perc])
@@ -177,6 +194,15 @@ def create_plot_cdf(site = "newtestaggregatelog.txt", savefig = False, showfig =
     return ax1
 
 def create_plot_violin(site = "newtestaggregatelog.txt", day = ""):
+    vals = clean_csv(site)
+    sns.set_style("whitegrid")
+
+    vals = vals.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
+    #tips = sns.load_dataset(vals)
+    ax = plt.subplot(111)
+    ax = sns.violinplot(data=vals)
+    plt.show()
+    '''
     vals = get_values(site, day)
 
     RTTv3 = sort_and_cast(vals[0])
@@ -201,6 +227,7 @@ def create_plot_violin(site = "newtestaggregatelog.txt", day = ""):
     plt.show()
 
     return ax
+    '''
 
-makeFiles()
+#makeFiles()
 main()
