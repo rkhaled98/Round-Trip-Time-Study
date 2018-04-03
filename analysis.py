@@ -9,7 +9,7 @@ import collections
 import os
 
 def main():
-    clean_csv()
+    clean_csv(site = "www.google.com")
     #vals = get_values()
     #create_plot_all(savefig = True)
     #create_plot_cdf(showfig = True)
@@ -20,10 +20,11 @@ def main():
     #create_plot_cdf(site = "www.google.com", showfig = True)
     #create_plot_cdf(site = "www.google.com", showfig = True)
 
-def clean_csv(file = "newtestaggregatelog.txt"):
-# get the important variables into the dataFrame.
-    df = pd.read_csv(file)
+def clean_csv(site = "aggregate"):
+# get the important variables into the dataFrame. For specific site or aggregate
+    df = pd.read_csv("newtestaggregatelog.txt")
     df = df.loc[:, ['tstamp', 'sitename', 'RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
+    df = df[df.sitename.str.match('^' + site + '$')] if site != "aggregate" else {} #regex for getting the exact site if specified
     print(df)
 
 def get(site):
