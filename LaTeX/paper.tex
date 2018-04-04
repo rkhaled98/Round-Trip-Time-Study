@@ -123,12 +123,6 @@ Introduction.
 
 Figure~\ref{fig:example} is an example figure.
 
-\begin{figure}[t]
-\centering
-    \includegraphics[width=0.41\textwidth]{fig/aggregategraph}
-     \caption{Example figure}
-      \label{fig:example}
-\end{figure}
 
 \section{Related work}
 \label{sec:related-work}
@@ -140,17 +134,39 @@ Related work.
 
 % explain what we've done in order to ensure reproducibility
 
-Collection of data was conducted using two Python libraries: pyping and PycURL. Pyping is a pure Python ICMP ping implementation \cite{pypingdocs}. PycURL is a Python interface to libcurl, which is a client-side URL transfer library. PycURL allows one to fetch various objects identified by a URL: in our case, objects corresponding to the URLs of various websites hosted on servers across the world \cite{pycurldocs}.
+Our goal was to observe Round Trip Time (RTT) of the request to a webserver isolated from the network time.
+\textbf{(Need clarification and further guidance on the goals and wording)}. 
+Collection of data was conducted using a pure ICMP ping implementation \cite{pypingdocs} and a client-side URL transfer library \cite{pycurldocs}. ICMP ping data was collected in order to contrast it to the data collected from the client-side URL transfer library; the former of which, in contrast to the latter, does not go all the way up the networking stack to the webserver application and instead immediately replies to the client. In other words, the delay of the webserver is not captured when using ICMP ping data. Having both sources of data provided insight on the origin of the RTT delay.
+\textbf{(I am not sure that this paragraph is an accurate description or is too much detail for the methodology section)}
 
-First, we wanted to calculate the Round Trip Time (RTT) as measured by a calculation involving, at the highest level, a website's pretransfer time and time to first byte (TTFB): the RTT was calculated as the pretransfer time subtracted from the TTFB, both of which were obtained with PycURL. To do this, it is as simple as creating a new Curl Object from PycURL, setting the relevant options; i.e. the name of the website and the FOLLOWLOCATION to 1. Setting the FOLLOWLOCATION to 1 tells the library to follow any Location: header that the server sends as part of a HTTP header in a 3xx response. The Location: header can specify a relative or an absolute URL to follow. The library will issue another request for the new URL and follow new Location: headers all the way until no more such headers are returned \cite{curloptfollowlocationdocs}.
+%Collection of data was conducted using two Python libraries: pyping and PycURL. Pyping is a pure Python ICMP ping implementation \cite{pypingdocs}. PycURL is a Python interface to libcurl, which is a client-side URL transfer library. PycURL allows one to fetch various objects identified by a URL: in our case, objects corresponding to the URLs of various websites hosted on servers across the world \cite{pycurldocs}.
 
-The next calculation we wanted to observe is the RTT on the second load of a website. This calculation has the same equation of RTT as described above, except with the appropriate second load of the pretransfer time and TTFB. In order to measure this, we took advantage of PycURL allowing for reuse of Curl Objects: one only needs to reset the relevant options identically to the first load and can then perform on the Curl Object. This process was repeated to calculate the RTT on the third load.
+First, we wanted to calculate the RTT as measured by a calculation involving, at the highest level, a website's pretransfer time and time to first byte (TTFB): the RTT was calculated as the pretransfer time subtracted from the TTFB, both of which were obtained with a client-side URL transfer library using Curl 
+\textbf{(Am I being too specific about the implementation by saying we used Curl?)}
+\cite{pycurldocs}. To do this, simply provide the hostname of a website to a Curl Object. In our implementation, we configured the options of the library to follow any Location: header that the server sends as part of a HTTP header in a 3xx response \cite{curloptfollowlocationdocs} 
+\textbf{(I am not sure exactly WHY I did this, but if it was something you suggested then some guidance would be appreciated. see \cite{curloptfollowlocationdocs}
+for details about setting FOLLOWLOCATION to 1 in Curl)}.
 
-Finally, to get an ICMP ping time, it is as simple as using the ping function of pyping on a specified website's hostname.
+%To do this, it is as simple as creating a new Curl Object from PycURL, setting the relevant options; i.e. the name of the website and the FOLLOWLOCATION to 1. Setting the FOLLOWLOCATION to 1 tells the library to follow any Location: header that the server sends as part of a HTTP header in a 3xx response. The Location: header can specify a relative or an absolute URL to follow. The library will issue another request for the new URL and follow new Location: headers all the way until no more such headers are returned \cite{curloptfollowlocationdocs}.
 
-The above network data; i.e. ICMP ping time and RTT of first, second, and third loads, were collected for a list of some of the most popular websites around the world at the time of writing this paper. A cron job was used to automate this collection of data to achieve a large sample size to analyze.
+The next calculation we wanted to observe is the RTT on the second load of a website. This calculation has the same equation of RTT as described above, except with the appropriate second load of the pretransfer time and TTFB. In order to measure this, we took advantage of Curl allowing for reuse of Objects: one only needs to reset the relevant options identically to the first load and can then perform on the Curl Object. This process was repeated to calculate the RTT on the third load.
+\textbf{(Again, am I being too specific about the implementation here?)}
 
-Data were plotted using the matplotlib library. In our analysis, we observed both aggregate data and site-specific data.
+Finally, we used pure ICMP to get ping RTTs for every website. %to get an ICMP ping time, it is as simple as using the ping function of pyping on a specified website's hostname.
+
+The above network data; i.e. ICMP ping time and RTT of first, second, and third loads, were collected for a list of some of the most popular websites around the world at the time of writing this paper. A cron job was used to automate this collection of data to achieve a large sample size to analyze. We ran the cronjob around once every ten minutes for a week.
+\textbf{(We can definitely change the frequency of the cronjob and collect data if needed)}
+
+%Data were plotted using the matplotlib library. 
+In our analysis, we observed both aggregate data and site-specific data by graphing their Cumulative Distribution Function, as shown in Fig. \ref{fig:example} below.
+
+\begin{figure}[h]
+\centering
+    \includegraphics[width=0.41\textwidth]{fig/aggregategraph}
+     \caption{Cumulative Distribution Function for aggregate RTT data}
+      \label{fig:example}
+\end{figure}
+
 
 \section{Evaluation}
 \label{sec:evaluation}
