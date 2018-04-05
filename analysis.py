@@ -10,12 +10,13 @@ import os
 
 def main():
     #clean_csv(site = "www.google.com")
-    #create_plot_cdf("www.google.com", showfig = True)
+    create_plot_cdf(site = "aggregate", showfig = True)
     #vals = get_values()
     #create_plot_all(savefig = True)
     #create_plot_cdf(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    create_plot_violin("www.google.com")
+    #create_plot_violin("www.google.com")
+    #create_plot_violin()
     #create_plot_cdf(showfig = True, savefig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
     #create_plot_cdf(site = "www.google.com", showfig = True)
@@ -25,8 +26,12 @@ def clean_csv(site = "aggregate"):
 # get the important variables into the dataFrame. For specific site or aggregate
     df = pd.read_csv("newtestaggregatelog.txt")
     df = df.loc[:, ['tstamp', 'sitename', 'RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
-    df = df[df.sitename.str.match('^' + site + '$')] if site != "aggregate" else {} #regex for getting the exact site if specified
-    #print(df)
+    df = df[df.sitename.str.match('^' + site + '$')] if site != "aggregate" else df #regex for getting the exact site if specified
+    df = df[~df.pingRTT.str.match("None")]
+    df.pingRTT.apply(lambda val: float(val))
+    df.pingRTT = df.pingRTT.astype('float64')
+    f = open('dataframe_out', 'w')
+    f.write(df.to_csv())
     return df
 
 def get(site):
@@ -144,7 +149,30 @@ def create_plot_all(savefig = False, showfig = False):
         print(max)
         f.close()
 
-def create_plot_cdf(site = "newtestaggregatelog.txt", savefig = False, showfig = False
+def create_plot_cdf(site, showfig = False, savefig = False):
+    data = clean_csv(site)
+    print(data)
+    #x = np.sort(data.RTT)
+    #print(x)
+    y = np.arange(1, len(data.RTT)+1) / len(data.RTT)
+    print(data.pingRTT)
+    print(data.RTT)
+    print(data.RTTtwo)
+    _ = plt.plot(np.sort(data.pingRTT), np.linspace(0, 1, len(data.pingRTT), endpoint=False))
+    _ = plt.plot(np.sort(data.RTT), np.linspace(0, 1, len(data.RTT), endpoint=False))
+    _ = plt.plot(np.sort(data.RTTtwo), np.linspace(0, 1, len(data.RTTtwo), endpoint=False))
+    _ = plt.plot(np.sort(data.RTTthree), np.linspace(0, 1, len(data.RTTthree), endpoint=False))
+
+    #_ = plt.plot(x, y, marker='.', linestyle='none')
+    _ = plt.xlabel('RTT')
+    _ = plt.ylabel('ECDF')
+    _ = plt.legend([ 'ping RTT', 'TTFB - PRET', 'TTFB - PRET 2ND LOAD', 'TTFB - PRET 3RD LOAD'])
+    ax1 = plt.subplot(111)
+    ax1.set_xlim([0,1000])
+    plt.savefig('graphs/CDF-of-' + site.replace('www.','') + '.png') if savefig else {}
+    plt.show() if showfig else {plt.close()}
+
+def create_plot_cdf_o(site = "newtestaggregatelog.txt", savefig = False, showfig = False
 , day = ""):
     '''
     vals = get_values(site, day)
@@ -155,24 +183,41 @@ def create_plot_cdf(site = "newtestaggregatelog.txt", savefig = False, showfig =
     pR = sort_and_cast(vals[3])
     '''
     vals = clean_csv(site)
-    vals = vals.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
-    vals.RTT = vals.RTT.sort_values()
-    vals.RTTtwo = vals.RTTtwo.sort_values()
-    vals.RTTthree = vals.RTTthree.sort_values()
-    vals.pingRTT = vals.pingRTT.sort_values()
+    vals = vals.loc[:, ['RTT', 'RTTtwo', 'RTTthree']]#, 'pingRTT']]
+    #vals.apply(lambda x: (x - np.mean(x)) / (np.max(x) - np.min(x)))
 
-    cum_dist = np.linspace(0.,1.,len(vals.RTT))
-    ser_cdf = pd.Series(cum_dist, index=vals.RTT)
+    #ser = pd.Series(vals.RTTtwo)
+    #(df - df.mean()) / (df.max() - df.min())
 
-    ser_cdf.plot(drawstyle='steps')
+    #ser.hist(cumulative=True, normed=1, bins=100)
 
-    vals.plot()
+    #ax1 = plt.subplot(111)
+    #ax1.set_xlim([0, 500])
+    #plt.show()
+    #vals.RTT = vals.RTT.sort_values()
+    #vals.RTTtwo = vals.RTTtwo.sort_values()
+    #vals.RTTthree = vals.RTTthree.sort_values()
+    #vals.pingRTT = vals.pingRTT.sort_values()
+
+    #cum_dist = np.linspace(0.,1.,len(vals.RTT))
+    #ser_cdf = pd.Series(cum_dist, index=vals.RTT)
+
+    #ser_cdf.plot(drawstyle='steps')
+
+    vals = vals.cumsum()
+    plt.figure; vals.plot();
+    with pd.plotting.plot_params.use('x_compat', True):
+        vals.RTT.plot(color='r')
+        vals.RTTtwo.plot(color='g')
+        vals.RTTthree.plot(color='b')
+    plt.show()
     '''
+
     plt.plot(np.sort(vals.pingRTT), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
     plt.plot(np.sort(vals.RTT), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
     plt.plot(np.sort(vals.RTTtwo), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
     plt.plot(np.sort(vals.RTTthree), np.linspace(0, 1, len(vals.pingRTT), endpoint=False))
-    '''
+
     plt.xlabel('RTT (ms)')
     plt.ylabel('CDF')
     if site == 'newtestaggregatelog.txt':
@@ -192,15 +237,19 @@ def create_plot_cdf(site = "newtestaggregatelog.txt", savefig = False, showfig =
     plt.savefig('graphs/CDF OF RTTs ' + site.replace('www.','') + '.png') if savefig else {}
     plt.show() if showfig else {plt.close()}
     return ax1
+    '''
 
-def create_plot_violin(site = "newtestaggregatelog.txt", day = ""):
+
+def create_plot_violin(site = "aggregate", day = ""):
     vals = clean_csv(site)
     sns.set_style("whitegrid")
 
-    vals = vals.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
+    vals = vals.loc[:, ['RTTtwo', 'RTT', 'RTTthree', 'pingRTT']]
     #tips = sns.load_dataset(vals)
     ax = plt.subplot(111)
     ax = sns.violinplot(data=vals)
+    #total =
+    ax.set_ylim([0, 100])
     plt.show()
     '''
     vals = get_values(site, day)
