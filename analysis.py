@@ -10,12 +10,12 @@ import os
 
 def main():
     #clean_csv(site = "www.google.com")
-    create_plot_cdf(site = "aggregate", showfig = True)
+    #create_plot_cdf(site = "aggregate", showfig = True)
     #vals = get_values()
     #create_plot_all(savefig = True)
     #create_plot_cdf(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    create_plot_violin(site = "aggregate")
+    #create_plot_violin(site = "aggregate")
     #create_plot_violin()
     #create_plot_cdf(showfig = True, savefig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
@@ -32,8 +32,8 @@ def clean_csv(site = "aggregate"):
     df.pingRTT = df.pingRTT.astype('float64')
     f = open('dataframe_out', 'w')
     f.write(df.to_csv())
-    for col in df.columns:
-        print(df[col])
+    #for col in df.columns:
+    #    print(df[col])
     return df
 
 '''
@@ -133,19 +133,16 @@ def create_plot_all(savefig = False, showfig = False):
 
 def create_plot_cdf(site, showfig = False, savefig = False):
     data = clean_csv(site)
-    data = data.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
+    data = data.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']] # only want the relevant columns in dataframe
     y = np.arange(1, len(data.RTT)+1) / len(data.RTT)
     for col in data.columns:
         _ = plt.plot(np.sort(data[col]), np.linspace(0, 1, len(data[col]), endpoint=False))
-    #_ = plt.plot(np.sort(data.pingRTT), np.linspace(0, 1, len(data.pingRTT), endpoint=False))
-    #_ = plt.plot(np.sort(data.RTT), np.linspace(0, 1, len(data.RTT), endpoint=False))
-    #_ = plt.plot(np.sort(data.RTTtwo), np.linspace(0, 1, len(data.RTTtwo), endpoint=False))
-    #_ = plt.plot(np.sort(data.RTTthree), np.linspace(0, 1, len(data.RTTthree), endpoint=False))
-    _ = plt.xlabel('RTT')
     _ = plt.ylabel('ECDF')
     _ = plt.legend([ 'ping RTT', 'TTFB - PRET', 'TTFB - PRET 2ND LOAD', 'TTFB - PRET 3RD LOAD'])
     ax1 = plt.subplot(111)
-    ax1.set_xlim([0,1000])
+    total = [data[x] for x in data]
+    xlim_max = np.percentile(total, 97.5)
+    ax1.set_xlim([0, xlim_max])
     plt.savefig('graphs/CDF-of-' + site.replace('www.','') + '.png') if savefig else {}
     plt.show() if showfig else {plt.close()}
 
