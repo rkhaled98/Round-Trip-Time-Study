@@ -10,7 +10,8 @@ import os
 
 def main():
     #makeFiles()
-    clean_csv('www.google.com', day='2018-03-25')
+    #clean_csv('www.google.com', day=['2018-03-25', '2018-03-24'])
+    clean_csv('www.google.com')
     #create_plot_cdf(site = "aggregate", showfig = True)
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
@@ -22,12 +23,12 @@ def main():
     #create_plot_cdf(site = "www.google.com", showfig = True)
     #create_plot_cdf(site = "www.google.com", showfig = True)
 
-def clean_csv(site = "aggregate", day = 'all'):
+def clean_csv(site = "aggregate", day = ['all']):
 # get the important variables into the dataFrame. For specific site or aggregate
     df = pd.read_csv("aggregate.txt")
     df = df.loc[:, ['tstamp', 'sitename', 'RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
     df = df if site == "aggregate" else df[df.sitename.str.match('^' + site + '$')] #regex for getting the exact site if specified
-    df = df if day == 'all' else df[df.tstamp.str.contains(day)]
+    df = df if day == ['all'] else df[df.tstamp.str.contains('|'.join([x for x in day])) if len(day) > 1 else df.tstamp.str.contains(day[0])] #this line isolates specific days as specified by the array day otherwise it shows all the days if default value of ['all'] is used for days
     df = df[~df.pingRTT.str.match("None")]
     df.pingRTT.apply(lambda val: float(val))
     df.pingRTT = df.pingRTT.astype('float64')
