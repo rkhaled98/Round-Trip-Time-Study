@@ -13,18 +13,18 @@ def main():
     #create_plot_cdf(site = "aggregate", showfig = True)
     #vals = get_values()
     #create_plot_all(savefig = True)
-    #create_plot_cdf(showfig = True)
+    create_plot_all(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
     #create_plot_violin(site = "aggregate")
     #create_plot_violin()
     #create_plot_cdf(showfig = True, savefig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
-    create_plot_cdf(site = "www.google.com", showfig = True)
+    #create_plot_cdf(site = "www.google.com", showfig = True)
     #create_plot_cdf(site = "www.google.com", showfig = True)
 
 def clean_csv(site = "aggregate"):
 # get the important variables into the dataFrame. For specific site or aggregate
-    df = pd.read_csv("newtestaggregatelog.txt")
+    df = pd.read_csv("aggregate.txt")
     df = df.loc[:, ['tstamp', 'sitename', 'RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
     df = df[df.sitename.str.match('^' + site + '$')] if site != "aggregate" else df #regex for getting the exact site if specified
     df = df[~df.pingRTT.str.match("None")]
@@ -36,88 +36,18 @@ def clean_csv(site = "aggregate"):
     #    print(df[col])
     return df
 
-def makeFiles(file = "newtestaggregatelog.txt"):
+def makeFiles(file = "aggregate.txt"):
 #the purpose of this function is to create
 #a separate log file for each website in the
 #directory folder logs.
     wd = os.getcwd() # this is where to get the files
     data = clean_csv() # get the values from the aggregate
-    sites = data.sitename.unique # get the unique sitenames
+    sites = data.sitename.unique() # get the unique sitenames
+    print(sites)
     for site in sites: # for each site
         f = open(wd + '/logs/' + site, 'w') # create new file with sitename in logs
         f.write(data[data.sitename.str.match('^' + site + '$')].to_csv()) # and write site specific data
 
-
-#the purpose of this function is to create
-#a separate log file for each website in the
-#directory folder logs.
-def makeFiles():
-    f = open('newtestaggregatelog.txt', 'r')
-    website_logs = collections.defaultdict(list)
-    for line in f.readlines():
-        values = line.split(',')
-        sitename = values[1].replace("https://", "").replace("/", "-")
-        time = values[0]
-        RTTsthree = values[-4].replace('\n','')
-        RTT = values[-3].replace('\n','')
-        RTTstwo = values[-2].replace('\n','')
-        pRTT = values[-1].replace('\n','')
-
-        if sitename != 'sitename':
-            website_logs[sitename].append((time, RTTsthree, RTT, RTTstwo, pRTT))
-
-    f.close()
-    #will go through the sites
-    for site in website_logs.keys():
-        #the below gets the cwd and puts the files in
-        #a folder named logs
-        cwd = os.getcwd()
-        f = open(cwd + '/logs/' + site, 'w')
-        #will add each RTT to a log
-        for RTT in website_logs[site]:
-            #f.writelines(RTT[0] + ',\n' + RTT[1] + ',\n' + RTT[2])
-            line = "%s,%s,%s,%s,%s\n" % (RTT[0],RTT[1],RTT[2], RTT[3], RTT[4])
-            #adding time, rtts3, rtt, rttstwo, and prtt
-            f.writelines(line)
-
-    f.close()
-
-def get_values(site = "newtestaggregatelog.txt", day = ""):
-    #by default, if this function gets no parameters,
-    #then it will do an aggregate log. But if the user
-    #specifies a specific website, then it will
-    #go get values for that site.
-    if site != "newtestaggregatelog.txt":
-        f = open(get_location(site))
-    else:
-        f = open("newtestaggregatelog.txt", 'r')
-    RTTv3s = []
-    RTTs = []
-    RTTv2s = []
-    pR = []
-    for line in f.readlines():
-        values = line.split(',')
-        if day == "" :
-            RTTv3s.append(values[-4].replace('\n',''))
-            RTTs.append(values[-3].replace('\n',''))
-            RTTv2s.append(values[-2].replace('\n',''))
-            pR.append(values[-1].replace('\n',''))
-        elif day[:10] in values[0]:
-            RTTv3s.append(values[-4].replace('\n',''))
-            RTTs.append(values[-3].replace('\n',''))
-            RTTv2s.append(values[-2].replace('\n',''))
-            pR.append(values[-1].replace('\n',''))
-
-
-    RTTv3s = [x for x in RTTv3s if x.replace('.','',1).isdigit()]
-    RTTs = [x for x in RTTs if x.replace('.','',1).isdigit()]
-    RTTv2s = [x for x in RTTv2s if x.replace('.','',1).isdigit()]
-    pR = [x for x in pR if x.replace('.','',1).isdigit()]
-
-    f.close()
-    return (RTTv3s, RTTs, RTTv2s, pR)
-
-'''
 def get_location(site):
     cwd = os.getcwd()
     return cwd + '/logs/' + site
@@ -125,11 +55,12 @@ def get_location(site):
 def create_plot_all(savefig = False, showfig = False):
     wd = os.getcwd() + '/logs/' # this is where to get the files
     sites = os.listdir(wd) # the list of sites in the directory
+    create_plot_cdf(site = "aggregate", showfig = showfig, savefig = savefig)
     for site in sites:
         f = open(wd + site) # open individual site
+        create_plot_cdf(site, showfig, savefig)
 
-
-
+'''
 def create_plot_all(savefig = False, showfig = False):
     wd = os.getcwd() + "/logs/"
     sites = os.listdir(wd)
@@ -147,6 +78,7 @@ def create_plot_all(savefig = False, showfig = False):
         create_plot_cdf(site, perc, savefig, showfig)
         print(max)
         f.close()
+'''
 
 def create_plot_cdf(site, showfig = False, savefig = False):
     data = clean_csv(site)
