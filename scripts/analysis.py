@@ -52,7 +52,7 @@ def create_plot_all(savefig = False, showfig = False):
         f = open(wd + site) # open individual site
         create_plot_cdf(site, showfig, savefig)
 
-def create_plot_cdf(site, showfig = False, savefig = False):
+def create_plot_cdf(site, showfig = False, savefig = False, day = ''):
     data = clean_csv(site)
     data = data.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']] # only want the relevant columns in dataframe
     y = np.arange(1, len(data.RTT)+1) / len(data.RTT)
