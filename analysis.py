@@ -48,10 +48,6 @@ def makeFiles(file = "aggregate.txt"):
         f = open(wd + '/logs/' + site, 'w') # create new file with sitename in logs
         f.write(data[data.sitename.str.match('^' + site + '$')].to_csv()) # and write site specific data
 
-def get_location(site):
-    cwd = os.getcwd()
-    return cwd + '/logs/' + site
-
 def create_plot_all(savefig = False, showfig = False):
     wd = os.getcwd() + '/logs/' # this is where to get the files
     sites = os.listdir(wd) # the list of sites in the directory
