@@ -56,7 +56,6 @@ def create_plot_all(savefig = False, showfig = False):
         f = open(wd + site) # open individual site
         create_plot_cdf(site, showfig, savefig)
 
-
 def create_plot_cdf(site, showfig = False, savefig = False):
     data = clean_csv(site)
     data = data.loc[:, ['RTT', 'RTTtwo', 'RTTthree', 'pingRTT']] # only want the relevant columns in dataframe
@@ -83,32 +82,6 @@ def create_plot_violin(site = "aggregate", day = ""):
     #total =
     ax.set_ylim([0, 1000])
     plt.show()
-    '''
-    vals = get_values(site, day)
-
-    RTTv3 = sort_and_cast(vals[0])
-    RTT = sort_and_cast(vals[1])
-    RTTv2 = sort_and_cast(vals[2])
-    pR = sort_and_cast(vals[3])
-
-    sns.set_style("whitegrid")
-    #tips = sns.load_dataset(RTTv3)
-
-
-
-    ax = plt.subplot(111)
-
-    total = [x for x in RTTv3] #+ [x for x in RTT] + [x for x in RTTv2] + [x for x in pR]
-    perc = np.percentile(total, 95)
-
-    ax.set_xlim([0, perc])
-
-
-    ax = sns.violinplot(x=RTTv3)
-    plt.show()
-
-    return ax
-    '''
 
 makeFiles()
 main()
