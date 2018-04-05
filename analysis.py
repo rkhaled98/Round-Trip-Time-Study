@@ -60,25 +60,6 @@ def create_plot_all(savefig = False, showfig = False):
         f = open(wd + site) # open individual site
         create_plot_cdf(site, showfig, savefig)
 
-'''
-def create_plot_all(savefig = False, showfig = False):
-    wd = os.getcwd() + "/logs/"
-    sites = os.listdir(wd)
-    #create_plot_cdf()
-    for site in sites:
-        f = open(wd + site)
-        values = []
-        for line in f.readlines():
-            valuesLine = line.split(',')
-            for value in valuesLine:
-                values.append(value)
-        values = sort_and_cast(values)
-        max = np.amax(values)
-        perc = np.percentile(values, 95)
-        create_plot_cdf(site, perc, savefig, showfig)
-        print(max)
-        f.close()
-'''
 
 def create_plot_cdf(site, showfig = False, savefig = False):
     data = clean_csv(site)
