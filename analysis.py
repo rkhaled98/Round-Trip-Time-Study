@@ -9,9 +9,8 @@ import collections
 import os
 
 def main():
-    #clean_csv(site = "www.google.com")
+    #makeFiles()
     #create_plot_cdf(site = "aggregate", showfig = True)
-    #vals = get_values()
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
@@ -32,8 +31,6 @@ def clean_csv(site = "aggregate"):
     df.pingRTT = df.pingRTT.astype('float64')
     f = open('dataframe_out', 'w')
     f.write(df.to_csv())
-    #for col in df.columns:
-    #    print(df[col])
     return df
 
 def makeFiles(file = "aggregate.txt"):
@@ -81,5 +78,4 @@ def create_plot_violin(site = "aggregate", day = ""):
     ax1.set_ylim([0, ylim_max])
     plt.show()
 
-#makeFiles()
 main()
