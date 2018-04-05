@@ -36,6 +36,13 @@ def clean_csv(site = "aggregate"):
     #    print(df[col])
     return df
 
+def makeFiles(file = "newtestaggregatelog.txt"):
+    wd = os.getcwd() # this is where to get the files
+    data = clean_csv()
+    sites = data.sitename.unique()
+    for site in sites:
+        f = open(wd + '/logs/' + site, 'w')
+        f.write(data[data.sitename.str.match('^' + site + '$')].to_csv())
 '''
 #the purpose of this function is to create
 #a separate log file for each website in the
@@ -114,9 +121,17 @@ def get_location(site):
     return cwd + '/logs/' + site
 
 def create_plot_all(savefig = False, showfig = False):
+    wd = os.getcwd() + '/logs/' # this is where to get the files
+    sites = os.listdir(wd) # the list of sites in the directory
+    for site in sites:
+        f = open(wd + site) # open individual site
+
+
+
+def create_plot_all(savefig = False, showfig = False):
     wd = os.getcwd() + "/logs/"
     sites = os.listdir(wd)
-    create_plot_cdf()
+    #create_plot_cdf()
     for site in sites:
         f = open(wd + site)
         values = []
@@ -184,5 +199,5 @@ def create_plot_violin(site = "aggregate", day = ""):
     return ax
     '''
 
-#makeFiles()
+makeFiles()
 main()
