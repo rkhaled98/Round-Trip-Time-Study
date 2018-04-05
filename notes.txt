@@ -1,0 +1,32 @@
+overall results 
+time of day data we can focus on second load, since we have established that that is the most reliable
+TOD -> would be nice to do some exploration. wide plot with all the hours of the day. See if there are
+groupngs such as evening morning afternoon.. for loop for each hour of the day. or use box plot
+omit the follow location stuff... not needed.
+
+
+
+our goal is to isolate round trip time for network time, using pycurl.
+separate preconnection time for the rest. 
+
+specify why did we do ping and the other: ping does not go all the way up
+the networking stack to the webserver application, immediately replies to you
+delay to web server is not captured, where the other one captures it. that
+is why ists interesting to have both of them to get where the delay is coming
+from. 
+
+add: how many times we ran the cronjob and the frequency.
+
+Results:
+evaluating results : which plots do we want to use ?
+our data is consistent with the hypothesis we had
+times of day
+spatial location of the site
+
+asia
+europe
+and north america
+
+alexa top 500
+time of day - hourly 
+every 10 minutes maybe! and sample later

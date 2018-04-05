@@ -14,7 +14,7 @@ def main():
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-11 Sunday")
-    #create_plot_violin(site = "aggregate")
+    create_plot_violin(site = "aggregate")
     create_plot_violin("www.taobao.com")
     #create_plot_cdf(showfig = True, savefig = True)
     #create_plot_cdf(showfig = True, day = "2018-02-13 Tuesday")
