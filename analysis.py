@@ -37,13 +37,17 @@ def clean_csv(site = "aggregate"):
     return df
 
 def makeFiles(file = "newtestaggregatelog.txt"):
+#the purpose of this function is to create
+#a separate log file for each website in the
+#directory folder logs.
     wd = os.getcwd() # this is where to get the files
-    data = clean_csv()
-    sites = data.sitename.unique()
-    for site in sites:
-        f = open(wd + '/logs/' + site, 'w')
-        f.write(data[data.sitename.str.match('^' + site + '$')].to_csv())
-'''
+    data = clean_csv() # get the values from the aggregate
+    sites = data.sitename.unique # get the unique sitenames
+    for site in sites: # for each site
+        f = open(wd + '/logs/' + site, 'w') # create new file with sitename in logs
+        f.write(data[data.sitename.str.match('^' + site + '$')].to_csv()) # and write site specific data
+
+
 #the purpose of this function is to create
 #a separate log file for each website in the
 #directory folder logs.
@@ -77,8 +81,6 @@ def makeFiles():
             f.writelines(line)
 
     f.close()
-'''
-'''
 
 def get_values(site = "newtestaggregatelog.txt", day = ""):
     #by default, if this function gets no parameters,
