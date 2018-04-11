@@ -11,7 +11,7 @@ import os
 def main():
     #makeFiles()
     #clean_csv('www.google.com', day=['2018-03-25', '2018-03-24'])
-    clean_csv('www.google.com')
+    clean_csv()
     #create_plot_cdf(site = "aggregate", showfig = True)
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
@@ -23,8 +23,9 @@ def main():
     #create_plot_cdf(site = "www.google.com", showfig = True)
     #create_plot_cdf(site = "www.google.com", showfig = True)
 
-def clean_csv(site = "aggregate", day = ['all']):
-# get the important variables into the dataFrame. For specific site or aggregate
+def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
+# get the important variables into the dataFrame. For specific site or aggregate,
+# and also return only specific days in the dataframe if specified other than 'all'
     df = pd.read_csv("aggregate.txt")
     df = df.loc[:, ['tstamp', 'sitename', 'RTT', 'RTTtwo', 'RTTthree', 'pingRTT']]
     df = df if site == "aggregate" else df[df.sitename.str.match('^' + site + '$')] #regex for getting the exact site if specified
@@ -32,8 +33,16 @@ def clean_csv(site = "aggregate", day = ['all']):
     df = df[~df.pingRTT.str.match("None")]
     df.pingRTT.apply(lambda val: float(val))
     df.pingRTT = df.pingRTT.astype('float64')
-    f = open('dataframe_out', 'w')
-    f.write(df.to_csv())
+    if show_hours:
+        df_hours = pd.DataFrame(columns=[str(x) for x in range(0,25,1)], index= [x for x in range(0,25,1)])
+        print(df_hours)
+        for i in range(0, 25, 1):
+            hour = "0" + str(i) if i < 10 else str(i)
+            print(hour)
+            df_hours[str(i)] = df[df.tstamp.str.contains('.*\s' + hour)] # + ':\d\d:\d*$')
+        print(df_hours)
+    #f = open('dataframe_out', 'w')
+    #f.write(df.to_csv())
     return df
 
 def makeFiles(file = "aggregate.txt"):
