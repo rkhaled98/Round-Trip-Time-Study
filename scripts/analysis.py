@@ -11,7 +11,7 @@ import os
 def main():
     #makeFiles()
     #clean_csv('www.google.com', day=['2018-03-25', '2018-03-24'])
-    clean_csv()
+    clean_csv(show_hours = True)
     #create_plot_cdf(site = "aggregate", showfig = True)
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
@@ -34,13 +34,13 @@ def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
     df.pingRTT.apply(lambda val: float(val))
     df.pingRTT = df.pingRTT.astype('float64')
     if show_hours:
-        df_hours = pd.DataFrame(columns=[str(x) for x in range(0,25,1)], index= [x for x in range(0,25,1)])
+        df_hours = pd.DataFrame(columns=[str(x) for x in range(0,25,1)])
         print(df_hours)
         for i in range(0, 25, 1):
             hour = "0" + str(i) if i < 10 else str(i)
             print(hour)
             df_hours[str(i)] = df[df.tstamp.str.contains('.*\s' + hour)] # + ':\d\d:\d*$')
-        print(df_hours)
+        print(df_hours["0"])
     #f = open('dataframe_out', 'w')
     #f.write(df.to_csv())
     return df
