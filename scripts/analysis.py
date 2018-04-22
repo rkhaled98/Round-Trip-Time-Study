@@ -7,12 +7,13 @@ from scipy import stats
 import collections
 
 import os
+import re # reg ex
 
 def main():
     #makeFiles()
     #clean_csv('www.google.com', day=['2018-03-25', '2018-03-24'])
     #clean_csv(show_hours = True)
-    create_plot_temporal(site = "aggregate", show_hours = True)
+    create_plot_temporal_v(site = "aggregate", show_hours = True)
     #create_plot_cdf(site = "aggregate", showfig = True)
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
@@ -55,6 +56,11 @@ def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
     #f = open('dataframe_out', 'w')
     #f.write(df.to_csv())
     return df
+#t
+def convert_tstamp_to_hour(tstamp):
+    p = re.compile('(2018-03-\d\d) ((\d\d).*)') # group 3 contains the hour
+    m = p.match(tstamp)
+
 
 def makeFiles(file = "aggregate.txt"):
 #the purpose of this function is to create
@@ -100,7 +106,17 @@ def create_plot_temporal(site, showfig = True, savefig = False, day = ['all'], s
     _ = plt.ylabel('ECDF')
     _ = plt.legend([key for key, value in data.iteritems()])
     ax1 = plt.subplot(111)
+    ax1.set_xlim([0, 1000])
     plt.show() if showfig else {plt.close()}
+
+def create_plot_temporal_v(site = "aggregate", day = ['all'], show_hours = True):
+    data = clean_csv(site, show_hours = True)
+    sns.set_style("whitegrid")
+    ax1 = plt.subplot(111)
+    x_i = [key for key, value in data.iteritems()]
+    y_i = [data[key] for key, value in data.iteritems()]
+    ax1 = sns.violinplot(x=x_i, y='RTTtwo', data=y_i)
+    plt.show()
 
 def create_plot_violin(site = "aggregate", day = ""):
     data = clean_csv(site)
