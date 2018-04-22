@@ -12,8 +12,7 @@ import re # reg ex
 def main():
     #makeFiles()
     #clean_csv('www.google.com', day=['2018-03-25', '2018-03-24'])
-    #clean_csv(show_hours = True)
-    create_plot_temporal_v(site = "aggregate", show_hours = True)
+    create_plot_temporal_v(site = "aggregate", show_hours = True, savefig = True)
     #create_plot_cdf(site = "aggregate", showfig = True)
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
@@ -62,6 +61,10 @@ def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
     return df
 #t
 def convert_tstamp_to_hour(tstamp):
+    '''
+    used in the clean_csv function to change a noisy tstamp
+    to just the hour, rounded down
+    '''
     p = re.compile('(2018-03-\d\d) ((\d\d).*)') # group 3 contains the hour
     m = p.match(tstamp)
     hour = m.group(3)
@@ -115,14 +118,16 @@ def create_plot_temporal(site, showfig = True, savefig = False, day = ['all'], s
     ax1.set_xlim([0, 1000])
     plt.show() if showfig else {plt.close()}
 
-def create_plot_temporal_v(site = "aggregate", day = ['all'], show_hours = True):
+def create_plot_temporal_v(site = "aggregate", showfig = True, savefig = False, day = ['all'], show_hours = True):
     dataf = clean_csv(site, show_hours = True)
     sns.set_style("whitegrid")
     ax1 = plt.subplot(111)
     #x_i = [key for key, value in data.iteritems()]
     #y_i = [data[key] for key, value in data.iteritems()]
     ax1 = sns.violinplot(x = 'tstamp', y = 'RTTtwo', data = dataf)
-    plt.show()
+    ax1.set_ylim([0, 700])
+    plt.savefig('graphs/VIOLIN-of-' + site.replace('www.','') + '.png', dpi = 600) if savefig else {}
+    plt.show() if showfig else {plt.close()}
 
 def create_plot_violin(site = "aggregate", day = ""):
     data = clean_csv(site)
