@@ -37,29 +37,8 @@ def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
     if show_hours:
         df.tstamp = df.tstamp.apply(lambda val: convert_tstamp_to_hour(val))
         print(df)
-        '''
-        d = []
-        #df = df.loc[:, ['tstamp', 'RTTtwo']]
-        for x in range(0, 25, 1):
-            hour = "0" + str(x) if x < 10 else str(x)
-            d[hour] = df[df.tstamp.str.contains('.*\s' + hour)]
-        return d
-        '''
-
-
-    '''
-    df_hours = pd.DataFrame(columns=[str(x) for x in range(0,25,1)])
-    print(df_hours)
-    for i in range(0, 25, 1):
-        hour = "0" + str(i) if i < 10 else str(i)
-        print(hour)
-        df_hours[str(i)] = df[df.tstamp.str.contains('.*\s' + hour)] # + ':\d\d:\d*$')
-        print(df_hours["0"])
-        '''
-    #f = open('dataframe_out', 'w')
-    #f.write(df.to_csv())
     return df
-#t
+    
 def convert_tstamp_to_hour(tstamp):
     '''
     used in the clean_csv function to change a noisy tstamp
@@ -122,8 +101,6 @@ def create_plot_temporal_v(site = "aggregate", showfig = True, savefig = False, 
     dataf = clean_csv(site, show_hours = True)
     sns.set_style("whitegrid")
     ax1 = plt.subplot(111)
-    #x_i = [key for key, value in data.iteritems()]
-    #y_i = [data[key] for key, value in data.iteritems()]
     ax1 = sns.violinplot(x = 'tstamp', y = 'RTTtwo', data = dataf)
     ax1.set_ylim([0, 600])
     plt.savefig('graphs/VIOLIN-of-' + site.replace('www.','') + '.png', dpi = 600) if savefig else {}
