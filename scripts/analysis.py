@@ -36,12 +36,16 @@ def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
     df.pingRTT.apply(lambda val: float(val))
     df.pingRTT = df.pingRTT.astype('float64')
     if show_hours:
-        d = {}
+        df.tstamp = df.tstamp.apply(lambda val: convert_tstamp_to_hour(val))
+        print(df)
+        '''
+        d = []
         #df = df.loc[:, ['tstamp', 'RTTtwo']]
         for x in range(0, 25, 1):
             hour = "0" + str(x) if x < 10 else str(x)
             d[hour] = df[df.tstamp.str.contains('.*\s' + hour)]
         return d
+        '''
 
 
     '''
@@ -60,6 +64,8 @@ def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
 def convert_tstamp_to_hour(tstamp):
     p = re.compile('(2018-03-\d\d) ((\d\d).*)') # group 3 contains the hour
     m = p.match(tstamp)
+    hour = m.group(3)
+    return hour
 
 
 def makeFiles(file = "aggregate.txt"):
@@ -110,12 +116,12 @@ def create_plot_temporal(site, showfig = True, savefig = False, day = ['all'], s
     plt.show() if showfig else {plt.close()}
 
 def create_plot_temporal_v(site = "aggregate", day = ['all'], show_hours = True):
-    data = clean_csv(site, show_hours = True)
+    dataf = clean_csv(site, show_hours = True)
     sns.set_style("whitegrid")
     ax1 = plt.subplot(111)
-    x_i = [key for key, value in data.iteritems()]
-    y_i = [data[key] for key, value in data.iteritems()]
-    ax1 = sns.violinplot(x=x_i, y='RTTtwo', data=y_i)
+    #x_i = [key for key, value in data.iteritems()]
+    #y_i = [data[key] for key, value in data.iteritems()]
+    ax1 = sns.violinplot(x = 'tstamp', y = 'RTTtwo', data = dataf)
     plt.show()
 
 def create_plot_violin(site = "aggregate", day = ""):
