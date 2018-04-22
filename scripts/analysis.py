@@ -125,7 +125,7 @@ def create_plot_temporal_v(site = "aggregate", showfig = True, savefig = False, 
     #x_i = [key for key, value in data.iteritems()]
     #y_i = [data[key] for key, value in data.iteritems()]
     ax1 = sns.violinplot(x = 'tstamp', y = 'RTTtwo', data = dataf)
-    ax1.set_ylim([0, 700])
+    ax1.set_ylim([0, 600])
     plt.savefig('graphs/VIOLIN-of-' + site.replace('www.','') + '.png', dpi = 600) if savefig else {}
     plt.show() if showfig else {plt.close()}
 
