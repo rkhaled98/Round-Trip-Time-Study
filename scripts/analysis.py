@@ -3,6 +3,9 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 
+import calendar
+from datetime import date
+
 from scipy import stats
 import collections
 
@@ -24,7 +27,7 @@ def main():
     #create_plot_cdf(site = "www.google.com", showfig = True)
     #create_plot_cdf(site = "www.google.com", showfig = True)
 
-def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
+def clean_csv(site = "aggregate", day = ['all'], show_hours = False, show_daily = False):
 # get the important variables into the dataFrame. For specific site or aggregate,
 # and also return only specific days in the dataframe if specified other than 'all'
     df = pd.read_csv("aggregate.txt")
@@ -37,8 +40,11 @@ def clean_csv(site = "aggregate", day = ['all'], show_hours = False):
     if show_hours:
         df.tstamp = df.tstamp.apply(lambda val: convert_tstamp_to_hour(val))
         print(df)
+    if show_daily:
+        df.tstamp = df.tstamp.apply(lambda val: convert_tstamp_to_day_of_week(val))
+        print(df)
     return df
-    
+
 def convert_tstamp_to_hour(tstamp):
     '''
     used in the clean_csv function to change a noisy tstamp
@@ -49,6 +55,13 @@ def convert_tstamp_to_hour(tstamp):
     hour = m.group(3)
     return hour
 
+def convert_tstamp_to_day_of_week(tstamp):
+    p = re.compile('(2018)-(03)-(\d\d)')
+    m = p.match(tstamp)
+    year = m.group(1)
+    month = m.group(2)
+    day = m.group(3)
+    return calendar.day_name[date.weekday(date(year,month,day))]
 
 def makeFiles(file = "aggregate.txt"):
 #the purpose of this function is to create
