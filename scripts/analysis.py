@@ -15,7 +15,7 @@ import re # reg ex
 def main():
     #makeFiles()
     #clean_csv('www.google.com', day=['2018-03-25', '2018-03-24'])
-    create_plot_temporal_v(site = "aggregate", show_hours = True, savefig = True)
+    create_plot_temporal_v(site = "aggregate", fshow_hours = False, fshow_daily = True, savefig = True)
     #create_plot_cdf(site = "aggregate", showfig = True)
     #create_plot_all(savefig = True)
     #create_plot_all(showfig = True)
@@ -58,10 +58,11 @@ def convert_tstamp_to_hour(tstamp):
 def convert_tstamp_to_day_of_week(tstamp):
     p = re.compile('(2018)-(03)-(\d\d)')
     m = p.match(tstamp)
-    year = m.group(1)
-    month = m.group(2)
-    day = m.group(3)
-    return calendar.day_name[date.weekday(date(year,month,day))]
+    year = int(m.group(1))
+    month = int(m.group(2))
+    day = int(m.group(3))
+    number = date.weekday(date(year, month, day))
+    return calendar.day_name[number]
 
 def makeFiles(file = "aggregate.txt"):
 #the purpose of this function is to create
@@ -110,13 +111,13 @@ def create_plot_temporal(site, showfig = True, savefig = False, day = ['all'], s
     ax1.set_xlim([0, 1000])
     plt.show() if showfig else {plt.close()}
 
-def create_plot_temporal_v(site = "aggregate", showfig = True, savefig = False, day = ['all'], show_hours = True):
-    dataf = clean_csv(site, show_hours = True)
+def create_plot_temporal_v(site = "aggregate", showfig = True, savefig = False, day = ['all'], fshow_hours = False, fshow_daily = False):
+    dataf = clean_csv(site, show_hours = fshow_hours, show_daily = fshow_daily)
     sns.set_style("whitegrid")
     ax1 = plt.subplot(111)
     ax1 = sns.violinplot(x = 'tstamp', y = 'RTTtwo', data = dataf)
-    ax1.set_ylim([0, 600])
-    plt.savefig('graphs/VIOLIN-of-' + site.replace('www.','') + '.png', dpi = 600) if savefig else {}
+    ax1.set_ylim([0, 750])
+    plt.savefig('graphs/VIOLIN-of-weekly' + site.replace('www.','') + '.png', dpi = 600) if savefig else {}
     plt.show() if showfig else {plt.close()}
 
 def create_plot_violin(site = "aggregate", day = ""):
