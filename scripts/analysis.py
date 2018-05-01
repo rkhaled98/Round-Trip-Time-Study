@@ -114,8 +114,19 @@ def create_plot_temporal(site, showfig = True, savefig = False, day = ['all'], s
 def create_plot_temporal_v(site = "aggregate", showfig = True, savefig = False, day = ['all'], fshow_hours = False, fshow_daily = False):
     dataf = clean_csv(site, show_hours = fshow_hours, show_daily = fshow_daily)
     sns.set_style("whitegrid")
+    yposlist = dataf.groupby(['tstamp'])['RTTtwo'].median().tolist()
+    # print(yposlist)
+    # print(dataf.groupby(['tstamp'])['RTTtwo'])
+    xposlist = range(len(yposlist))
+    grouped = dataf.groupby('tstamp')
+    print(np.std(dataf.RTTtwo, ddof=0))
+    print(np.mean(dataf.RTTtwo))
+    # print(grouped['RTTtwo'].agg('std'))
+    stringlist = ["std:" + str(x) for x in grouped['RTTtwo'].agg(np.std)]
     ax1 = plt.subplot(111)
     ax1 = sns.violinplot(x = 'tstamp', y = 'RTTtwo', data = dataf)
+    for i in range(len(stringlist)):
+        ax1.text(xposlist[i], yposlist[i], stringlist[i])
     ax1.set_ylim([0, 750])
     plt.savefig('graphs/VIOLIN-of-weekly' + site.replace('www.','') + '.png', dpi = 600) if savefig else {}
     plt.show() if showfig else {plt.close()}
